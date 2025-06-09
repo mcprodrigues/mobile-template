@@ -1,29 +1,28 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import '@/app/globals.css';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import React from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+  const [fontsLoaded] = useFonts({
+    'Poppins-Regular': require ('@/assets/fonts/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require ('@/assets/fonts/Poppins-SemiBold.ttf')
+    
+  })
+
+  if (!fontsLoaded) {
+
+    return (
+      <View className='flex-1 justify-center items-center bg-white'>
+        <ActivityIndicator size='large' color="EDB24E"></ActivityIndicator>
+      </View>
+    )
+
   }
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+  return <Stack />;
 }
