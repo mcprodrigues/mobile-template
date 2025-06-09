@@ -16,14 +16,14 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const isDisabled = variant === 'disabled' || loading;
 
-  const baseStyle = 'w-80 rounded-full py-4 px-8 items-center justify-center';
-  const primaryStyle = 'bg-blue-700';
+  const baseStyle = 'w-96 rounded-full py-4 px-8 items-center justify-center';
+  const primaryStyle = 'bg-blue-800';
   const outlineStyle = 'border border-blue-700 bg-transparent';
   const disabledStyle = 'bg-gray-300';
 
   const textBase = 'text-lg font-poppinssb';
   const textPrimary = 'text-white';
-  const textOutline = 'text-blue-700';
+  const textOutline = 'text-blue-800';
   const textDisabled = 'text-gray-500';
 
   const buttonClass = [
