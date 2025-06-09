@@ -1,10 +1,9 @@
-import OnboardingItem from '@/components/onboarding/OnboardingItem';
-import Pagination from '@/components/onboarding/Pagination';
 import { onboardingData } from '@/data/onboardingData';
 import { router } from 'expo-router';
-
 import React, { useRef } from 'react';
 import { Animated, FlatList as RNFlatList } from 'react-native';
+import OnboardingItem from './OnboardingItem';
+import Pagination from './Pagination';
 
 export default function OnboardingScreen() {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -15,8 +14,7 @@ export default function OnboardingScreen() {
       flatListRef.current?.scrollToIndex({ index: index + 1 });
     } else {
       router.replace('/auth/SplashScreen');  
-      
-  };
+      }
   };
 
   return (

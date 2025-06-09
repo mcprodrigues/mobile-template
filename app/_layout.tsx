@@ -9,9 +9,9 @@ import { ActivityIndicator, View } from 'react-native';
 export default function RootLayout() {
 
   const [fontsLoaded] = useFonts({
-    'Poppins-Regular': require ('@/assets/fonts/Poppins-Regular.ttf'),
-    'Poppins-SemiBold': require ('@/assets/fonts/Poppins-SemiBold.ttf')
-    
+    'Poppins-Regular': require('@/assets/fonts/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require('@/assets/fonts/Poppins-SemiBold.ttf')
+
   })
 
   if (!fontsLoaded) {
@@ -25,15 +25,6 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="(tabs)"
-        options={{ headerShown: false }}
-      />
-    </Stack>
+    <Stack screenOptions={{ headerShown: false }} />
   );
 }
