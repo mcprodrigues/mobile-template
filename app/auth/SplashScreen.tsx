@@ -6,7 +6,7 @@ import { Text, View } from 'react-native';
 
 export default function SplashScreen() {
   return (
-    <View className="flex-1 p-32 justify-end items-center gap-4">
+    <View className="flex-1 p-28 justify-end items-center gap-4">
       <Image
         source={require('@/assets/images/moema.gif')}
         style={{ width: 200, height: 300 }}
@@ -26,7 +26,7 @@ export default function SplashScreen() {
       />
 
       <Link href="/auth/Login">
-        <Text className=" font-poppinssb text-xl text-blue-800">Já tenho uma conta</Text>
+        <Text className="w-full font-poppinssb text-xl text-blue-800">Já tenho uma conta</Text>
       </Link>
     </View>
   );

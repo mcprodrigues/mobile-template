@@ -1,19 +1,34 @@
-import { Button } from '@/components/Button';
-import { AnimatePresence, MotiView } from 'moti';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Text, TextInput, View } from 'react-native';
+import {
+  Pressable,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
+
+import { Button } from '@/components/Button';
+
+import { Eye, EyeOff } from 'lucide-react-native';
+import { AnimatePresence, MotiView } from 'moti';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function RegisterSteps() {
   const [step, setStep] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     senha: '',
     nome: '',
   });
 
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-  const isSenhaValid = formData.senha.length >= 6;
-  const isNomeValid = formData.nome.trim().length > 2;
+  const isEmailValid =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+    formData.email.length <= 40;
+  const isSenhaValid =
+    formData.senha.length >= 6 && formData.senha.length <= 8;
+  const isNomeValid =
+    formData.nome.trim().length >= 3 && formData.nome.length <= 30;
 
   const canProceed = () => {
     if (step === 0) return isEmailValid;
@@ -27,7 +42,6 @@ export default function RegisterSteps() {
       setStep(prev => prev + 1);
     } else {
       console.log('Cadastro finalizado:', formData);
-      // Ex: redirecionar para outra tela
     }
   };
 
@@ -41,6 +55,7 @@ export default function RegisterSteps() {
       keyboardType: 'email-address',
       secure: false,
       helper: 'Use um endereço de e-mail válido.',
+      maxLength: 40,
     },
     {
       title: 'Agora...',
@@ -49,8 +64,9 @@ export default function RegisterSteps() {
       value: formData.senha,
       onChange: (text: string) => setFormData({ ...formData, senha: text }),
       keyboardType: 'default',
-      secure: true,
+      secure: !showPassword,
       helper: 'Sua senha deve ter pelo menos 8 caracteres',
+      maxLength: 8,
     },
     {
       title: 'Para finalizar',
@@ -60,55 +76,84 @@ export default function RegisterSteps() {
       onChange: (text: string) => setFormData({ ...formData, nome: text }),
       keyboardType: 'default',
       secure: false,
-      helper: 'Esse será seu nome de usuário no aplicativo.',
+      helper: 'Esse será seu nome de usuário no aplicativo',
+      maxLength: 30,
     },
   ];
 
   const current = steps[step];
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className="flex-1 bg-white justify-start items-center pt-28"
-    >
-      <AnimatePresence>
-        <MotiView
-          key={step}
-          from={{ opacity: 0, translateX: 20 }}
-          animate={{ opacity: 1, translateX: 0 }}
-          exit={{ opacity: 0, translateX: -20 }}
-          transition={{ type: 'timing', duration: 500 }}
-          className="gap-2"
-        >
-          <Text className=" text-center text-2xl text-zinc-800 font-poppins">
-            {current.title}
-          </Text>
-          <Text className="text-3xl text-center text-zinc-900 mb-6 font-poppinssb">
-            {current.subtitle}
-          </Text>
+    <View className="flex-1 bg-white">
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={20}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'space-between',
+          paddingTop: 112,
+          paddingBottom: 40,
+          paddingHorizontal: 24,
+        }}
+      >
+        <AnimatePresence>
+          <MotiView
+            key={step}
+            from={{ opacity: 0, translateX: 20 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            exit={{ opacity: 0, translateX: -20 }}
+            transition={{ type: 'timing', duration: 300 }}
+          >
+            <Text className="text-center text-2xl text-zinc-800 font-poppins">
+              {current.title}
+            </Text>
+            <Text className="text-3xl text-center text-zinc-900 mb-6 font-poppinssb">
+              {current.subtitle}
+            </Text>
 
-          <TextInput
-            className="border border-zinc-300 rounded-md px-4 py-3 text-base text-black font-poppins"
-            placeholder={current.placeholder}
-            value={current.value}
-            onChangeText={current.onChange}
-            secureTextEntry={current.secure}
-            keyboardType={current.keyboardType as any}
-          />
+            <View className="relative mb-2">
+              <TextInput
+                className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${
+                  isFocused ? 'border-black' : 'border-zinc-300'
+                } pr-12`}
+                placeholder={current.placeholder}
+                value={current.value}
+                onChangeText={current.onChange}
+                secureTextEntry={current.secure}
+                keyboardType={current.keyboardType as any}
+                maxLength={current.maxLength}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+              {step === 1 && (
+                <Pressable
+                  className="absolute right-4 top-1/2 -translate-y-1/2"
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color="gray" />
+                  ) : (
+                    <Eye size={20} color="gray" />
+                  )}
+                </Pressable>
+              )}
+            </View>
 
-          <Text className="text-sm text-center text-zinc-500 mt-2 mb-5 font-poppins">
-            {current.helper}
-          </Text>
-          <View className='flex-1 justify-end pb-16'>
-            
+            <Text className="text-sm text-center text-zinc-500 mt-2 font-poppins mb-10">
+              {current.helper}
+            </Text>
+          </MotiView>
+        </AnimatePresence>
+
+        <View className="mb-10">
           <Button
-            variant='primary'
+            variant={canProceed() ? 'primary' : 'disabled'}
             title={step < 2 ? 'Continuar' : 'Criar conta'}
             onPress={handleNext}
           />
-          </View>
-        </MotiView>
-      </AnimatePresence>
-    </KeyboardAvoidingView>
+        </View>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
