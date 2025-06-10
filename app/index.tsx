@@ -14,7 +14,7 @@ export default function OnboardingScreen() {
     if (index < onboardingData.length - 1) {
       flatListRef.current?.scrollToIndex({ index: index + 1 });
     } else {
-      router.replace('/auth/SplashScreen');  
+      router.push('/auth/splash/SplashScreen');  
       
   };
   };

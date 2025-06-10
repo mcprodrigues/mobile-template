@@ -1,12 +1,20 @@
-import { Button } from '@/components/Button';
 import { Image } from 'expo-image';
 import { Link, router } from 'expo-router';
 import React from 'react';
-import { Text, View } from 'react-native';
+
+import { Text, TouchableOpacity, View } from 'react-native';
+
+import { Button } from '@/components/Button';
+import { Feather } from '@expo/vector-icons';
 
 export default function SplashScreen() {
   return (
     <View className="flex-1 p-28 justify-end items-center gap-4">
+      <TouchableOpacity onPress={() => router.back()}
+        className="absolute top-14 left-6 flex-row items-center h-16 "
+        >
+        <Feather name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
       <Image
         source={require('@/assets/images/moema.gif')}
         style={{ width: 200, height: 300 }}
@@ -22,10 +30,10 @@ export default function SplashScreen() {
       <Button 
         title="Criar conta" 
         variant="primary" 
-        onPress={() => router.push('/auth/Register')} 
+        onPress={() => router.push('/auth/register/Register')} 
       />
 
-      <Link href="/auth/Login">
+      <Link href="/auth/login/Login">
         <Text className="w-full font-poppinssb text-xl text-blue-800">Já tenho uma conta</Text>
       </Link>
     </View>

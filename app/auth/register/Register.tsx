@@ -1,4 +1,4 @@
-import RegisterSteps from '@/components/RegisterSteps';
+import RegisterSteps from '@/app/auth/register/RegisterSteps';
 import { View } from 'react-native';
 
 export default function Register() {

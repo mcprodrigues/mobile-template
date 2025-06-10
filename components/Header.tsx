@@ -22,7 +22,7 @@ export default function Header({ title, router }: HeaderProps) {
         <Feather name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
 
-      <Text className=" left-0 right-0 text-center text-lg font-poppinssb text-black">
+      <Text className=" left-0 right-0 text-center text-xl font-poppinssb text-black">
         {title}
       </Text>
 
