@@ -106,7 +106,7 @@ export default function RegisterSteps() {
 
   return (
     <View className={`flex-1 ${step === 3 ? 'bg-slate-950' : 'bg-white'}`}>
-      <View className="flex-row items-center justify-between px-4 h-16">
+      <View className="flex-row items-center justify-between px-4">
         <TouchableOpacity onPress={handleBack}>
           <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
@@ -129,7 +129,6 @@ export default function RegisterSteps() {
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'space-between',
-          paddingTop: 112,
           paddingHorizontal: 24,
         }}
       >
@@ -141,7 +140,7 @@ export default function RegisterSteps() {
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: 'timing', duration: 250 }}
                 key={`step-title-${step}`}
-                className="text-center text-2xl text-zinc-800 font-poppins"
+                className="text-center pt-16 text-2xl text-zinc-800 font-poppins"
               >
                 {current.title}
               </MotiText>
