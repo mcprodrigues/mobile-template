@@ -9,13 +9,16 @@ import {
 } from 'react-native';
 
 
+
 import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Eye, EyeOff } from 'lucide-react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
 import { MotiText } from 'moti';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 
 import { Button } from '@/components/Button';
@@ -65,6 +68,17 @@ export default function RegisterSteps() {
       router.back();
     }
   };
+
+  const handleRegisterSuccess = async () => {
+  try {
+    await AsyncStorage.setItem('userName', formData.nome);
+    await AsyncStorage.setItem('userEmail', formData.email);
+    await AsyncStorage.setItem('userPassword', formData.senha);
+    router.replace('/(tabs)/Profile');  
+  } catch (error) {
+    console.error('Erro ao salvar dados', error);
+  }
+};
 
   const steps = [
     {
@@ -232,7 +246,7 @@ export default function RegisterSteps() {
           <Button
             title="Acessar Pokédex"
             variant="primary"
-            onPress={() => router.push('/')}
+            onPress={() => router.replace('/(tabs)') }
           />
 
         </View>

@@ -12,6 +12,9 @@
     },
     "android": {
       "package": "com.mariaclara.pokedex",
+      "permissions": [
+        "CAMERA"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/images.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +28,12 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permita que este aplicativo acesse sua câmera para tirar fotos"
+        }
+      ],
       [
         "expo-splash-screen",
         {

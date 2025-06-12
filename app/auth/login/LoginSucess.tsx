@@ -34,10 +34,9 @@ export default function LoginSuccess() {
     <View className="flex-1 p-28 justify-end items-center gap-4 bg-white">
       <Image
         source={require('@/assets/images/pixel.png')}
-        style={{ width: 200, height: 300 }}
       />
       <Text className="w-80 text-3xl font-poppinssb text-center text-black">
-        Bem-vindo de volta, Treinador!
+        Bem-vindo de volta, treinador!
       </Text>
       <Text className="w-96 text-base text-center text-stone-500 font-poppins leading-tight">
         Esperamos que tenha tido uma longa jornada desde a última vez em que nos visitou.      </Text>
@@ -45,7 +44,7 @@ export default function LoginSuccess() {
       <Button
         title="Acessar Pokédex"
         variant="primary"
-        onPress={() => router.push('/')}
+        onPress={() => router.push('/(tabs)')}
       />
     </View>
   );
