@@ -15,6 +15,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Button } from '@/components/Button';
 import FormInput from '@/components/FormInput';
 import Header from '@/components/Header';
+import TokenConfirmationStep from '@/components/TokenConfirmationStep';
 
 export default function ForgotPassoword() {
   const router = useRouter();
@@ -116,64 +117,17 @@ export default function ForgotPassoword() {
         )}
 
         {step === 1 && (
-          <View className="flex-1 justify-between px-6 pb-8">
-            <View className="pt-10">
-              <MotiText
-                from={{ opacity: 0, translateY: 10 }}
-                animate={{ opacity: 1, translateY: 0 }}
-                transition={{ type: 'timing', duration: 250 }}
-                className="text-3xl text-black text-center font-poppinssb"
-              >
-                Insira o código
-              </MotiText>
-              <MotiText
-                from={{ opacity: 0, translateY: 10 }}
-                animate={{ opacity: 1, translateY: 0 }}
-                transition={{ type: 'timing', duration: 250, delay: 80 }}
-                className="text-center font-poppins text-zinc-700 mt-1"
-              >
-                Digite o código de 6 dígitos enviado para{' '}
-                <Text className="font-poppinssb">{email}</Text>
-              </MotiText>
-              <View className="flex-row justify-center gap-2 mt-6">
-                {code.map((digit, index) => (
-                  <TextInput
-                    key={index}
-                    ref={(ref) => {
-                      inputs.current[index] = ref;
-                    }}
-                    className="w-10 h-12 border border-zinc-400 text-center text-lg font-poppins rounded-md"
-                    maxLength={1}
-                    keyboardType="number-pad"
-                    value={digit}
-                    onChangeText={(text) => handleChange(text, index)}
-                    onKeyPress={(event) => handleKeyPress(event, index)}
-                  />
-                ))}
-              </View>
-
-              <Text className="text-center font-poppins text-sm text-zinc-500 mt-4">
-                Não recebeu o código?{' '}
-                {timeLeft > 0 ? (
-                  <Text className="text-zinc-500 font-poppinssb">
-                    Reenviar em {timeLeft}s
-                  </Text>
-                ) : (
-                  <Text className="text-blue-700 font-poppinssb">Reenvie agora</Text>
-                )}
-              </Text>
-            </View>
-
-            <View className="mb-10">
-              <Button
-                title="Continuar"
-                variant={code.every((d) => d !== '') ? 'primary' : 'disabled'}
-                onPress={() => {}}
-              />
-            </View>
-          </View>
+          <TokenConfirmationStep
+            email={email}
+            code={code}
+            setCode={setCode}
+            timeLeft={timeLeft}
+            setTimeLeft={setTimeLeft}
+            onContinue={() => { }}
+          />
         )}
-      </KeyboardAwareScrollView>
-    </View>
+
+      </KeyboardAwareScrollView >
+    </View >
   );
 }

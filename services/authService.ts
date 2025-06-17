@@ -14,7 +14,7 @@ export async function loginUser(data: {
   password: string;
 }) {
   const response = await api.post('/auth/login', data);
-  return response.data; // token, user info, etc
+  return response.data; 
 }
 
 export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
