@@ -36,6 +36,10 @@ export default function RegisterSteps() {
 
   const isSenhaValid =
     formData.senha.length >= 6 && formData.senha.length <= 8;
+  const shouldHidePassword = step === 1 ? !showPassword : false;
+
+
+
 
   const isNomeValid =
     formData.nome.trim().length >= 3 && formData.nome.length <= 30;
@@ -74,7 +78,6 @@ export default function RegisterSteps() {
       value: formData.email,
       onChange: (text: string) => setFormData({ ...formData, email: text }),
       keyboardType: 'email-address',
-      secure: false,
       helper: 'Use um endereço de e-mail válido.',
       maxLength: 40,
     },
@@ -85,10 +88,10 @@ export default function RegisterSteps() {
       value: formData.senha,
       onChange: (text: string) => setFormData({ ...formData, senha: text }),
       keyboardType: 'default',
-      secure: !showPassword,
       helper: 'Sua senha deve ter pelo menos 8 caracteres',
       maxLength: 8,
     },
+
     {
       title: 'Para finalizar',
       subtitle: 'Qual é o seu nome?',
@@ -96,7 +99,6 @@ export default function RegisterSteps() {
       value: formData.nome,
       onChange: (text: string) => setFormData({ ...formData, nome: text }),
       keyboardType: 'default',
-      secure: false,
       helper: 'Esse será seu nome de usuário no aplicativo',
       maxLength: 30,
     },
@@ -154,25 +156,26 @@ export default function RegisterSteps() {
               >
                 {current.subtitle}
               </MotiText>
-
               <View className="relative mb-2">
                 <TextInput
+                  key={showPassword ? 'visible' : 'hidden'}
                   className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'
                     } pr-12`}
                   placeholder={current.placeholder}
                   value={current.value}
                   onChangeText={current.onChange}
-                  secureTextEntry={current.secure}
+                  secureTextEntry={step === 1 && !showPassword}
                   keyboardType={current.keyboardType as any}
                   maxLength={current.maxLength}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
 
+
                 {step === 1 && (
                   <Pressable
                     className="absolute right-4 top-1/2 -translate-y-1/2"
-                    onPress={() => setShowPassword(!showPassword)}
+                    onPress={() => setShowPassword(prev => !prev)}
                   >
                     {showPassword ? (
                       <EyeOff size={20} color="gray" />
@@ -182,6 +185,9 @@ export default function RegisterSteps() {
                   </Pressable>
                 )}
               </View>
+
+
+
 
               <MotiText
                 from={{ opacity: 0 }}
@@ -232,7 +238,7 @@ export default function RegisterSteps() {
           <Button
             title="Acessar Pokédex"
             variant="primary"
-            onPress={() => router.push('/')}
+            onPress={() => router.push('/(tabs)')}
           />
 
         </View>
