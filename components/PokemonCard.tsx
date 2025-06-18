@@ -1,4 +1,5 @@
 import { pokemons } from '@/constants/pokemons';
+import { getDisplayName } from '@/utils/getDisplayName';
 import { Image, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
@@ -47,26 +48,25 @@ export default function PokemonCard({
   };
 
   return (
-<View
-  style={{ backgroundColor: bgColorCard }}
-  className="w-[328px] h-[102px] relative rounded-2xl overflow-hidden"
->
-      {/* Lado direito do card */}
-<View
-  style={{ backgroundColor: bgColorRight }}
-  className="w-[126px] h-[102px] absolute left-[202px] top-0 rounded-2xl"
-/>
+    <View
+      style={{ backgroundColor: bgColorCard }}
+      className="w-[328px] h-[102px] relative rounded-2xl overflow-hidden"
+    >
 
-      {/* Container das imagens alinhado à direita */}
-      <View className="absolute right-2 top-0 w-[100px] h-[100px]">
+      <View
+        style={{ backgroundColor: bgColorRight }}
+        className="w-[126px] h-[102px] absolute right-[202px] top-0 rounded-2xl"
+      />
+      {/* Container das imagens alinhado à esquerda */}
+      <View className="absolute left-2 top-0 w-[100px] h-[100px]">
         <View className="absolute top-2 right-0 z-0">{renderElementImage()}</View>
         <View className="absolute top-4 right-4 z-10">{renderPokemonImage()}</View>
       </View>
 
-      {/* Nome do Pokémon */}
-      <View className="absolute left-5 top-8 justify-center items-center gap-1">
+
+      <View className="absolute left-40 top-8 justify-center items-center gap-1">
         <Text className="text-black text-2xl font-poppinssb">
-          {isFound ? displayName ?? name.charAt(0).toUpperCase() + name.slice(1) : '???'}
+            {getDisplayName(name)}
         </Text>
       </View>
     </View>

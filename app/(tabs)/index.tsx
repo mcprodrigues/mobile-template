@@ -16,7 +16,7 @@ export default function Index() {
   };
 
   return (
-    <View className="flex-1 bg-[#CC0000] items-center justify-start pt-12 space-y-6">
+    <View className="flex-1 bg-rose-700 items-center justify-start pt-12 space-y-6">
 
       {/* Topo com luzes indicadores */}
       <View className="flex-row w-full px-3">
@@ -44,7 +44,7 @@ export default function Index() {
       <View className="w-full">
         <Svg height="40" width={width}>
           <Polyline
-            points="0,30 75,30 100,10 390,10"
+            points="0,30 75,30 100,10 410,10"
             fill="none"
             stroke="black"
             strokeWidth="3"
@@ -77,8 +77,8 @@ export default function Index() {
           </TouchableOpacity>
 
           {/* Botão de tirar foto (centro) */}
-          <TouchableOpacity className="w-20 h-20 rounded-full bg-blue-800 border-[4px] border-blue-500 items-center justify-center">
-          <View className="w-6 h-6 bg-white/60 rounded-full mr-8 mb-8" />
+          <TouchableOpacity className="w-16 h-16 rounded-full bg-blue-700 border-[4px] border-blue-800 items-center justify-center">
+          <View className="w-4 h-4 bg-white/60 rounded-full mr-4 mb-8" />
           </TouchableOpacity>
 
           {/* Botão de trocar câmera (direita) */}
