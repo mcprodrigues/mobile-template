@@ -45,7 +45,7 @@ export default function LoginSuccess() {
       <Button
         title="Acessar Pokédex"
         variant="primary"
-        onPress={() => router.push('/')}
+        onPress={() => router.push('/(tabs)')}
       />
     </View>
   );
