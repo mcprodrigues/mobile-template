@@ -7,7 +7,7 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Camaleão',
+  camaleao: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
@@ -29,7 +29,7 @@ export default function Pokedex() {
   function handleCapture(name: string, isFound: boolean) {
     if (isFound) {
       router.push({
-        pathname: '/pokemon/[name]',
+        pathname: '/(details)/[name]',
         params: { name },
       });
     } else {

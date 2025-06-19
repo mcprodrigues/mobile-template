@@ -12,7 +12,6 @@ type TabBarIconProps = {
   iconInactive: React.FC<SvgProps>;
 };
 
-
 const TabIcon = ({ focused, label, iconActive: IconActive, iconInactive: IconInactive }: TabBarIconProps) => {
   const Icon = focused ? IconActive : IconInactive;
 
@@ -33,6 +32,7 @@ const TabIcon = ({ focused, label, iconActive: IconActive, iconInactive: IconIna
 export default function _Layout() {
   return (
     <Tabs
+      backBehavior="history"  
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,

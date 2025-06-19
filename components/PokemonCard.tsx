@@ -1,5 +1,7 @@
+import { initialPokemons } from '@/constants/initialPokemons';
 import { pokemons } from '@/constants/pokemons';
 import { getDisplayName } from '@/utils/getDisplayName';
+import { useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
@@ -47,6 +49,16 @@ export default function PokemonCard({
     return <Svg width={94} height={94} />;
   };
 
+  const [pokemonsList, setPokemonsList] = useState(initialPokemons);
+
+const handlePress = (name: string) => {
+  setPokemonsList(prev =>
+    prev.map(p =>
+      p.name === name ? { ...p, isFound: true } : p
+    )
+  );
+};
+
   return (
     <View
       style={{ backgroundColor: bgColorCard }}
@@ -66,7 +78,7 @@ export default function PokemonCard({
 
       <View className="absolute left-40 top-8 justify-center items-center gap-1">
         <Text className="text-black text-2xl font-poppinssb">
-            {getDisplayName(name)}
+            {getDisplayName(name, isFound)}
         </Text>
       </View>
     </View>

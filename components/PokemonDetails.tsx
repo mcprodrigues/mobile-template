@@ -1,13 +1,14 @@
-import { images } from '@/constants/images';
-import { Image, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { pokemons } from '@/constants/pokemons';
 import { getDisplayName } from '@/utils/getDisplayName';
+import { router } from 'expo-router';
+import { ArrowLeft } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgProps } from 'react-native-svg';
 
 interface PokemonDetailsProps {
-  name: string;
+  name: keyof typeof pokemons;
   description: string;
   curiosities: string;
   image: any;
@@ -17,7 +18,7 @@ interface PokemonDetailsProps {
 
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Camaleão',
+  camaleao: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
@@ -37,6 +38,7 @@ export default function PokemonDetails({
   image,
 }: PokemonDetailsProps) {
 
+  const insets = useSafeAreaInsets();
   const ElementImage = pokemons[name]?.element;
 
   const renderElementImage = () => {
@@ -45,8 +47,8 @@ export default function PokemonDetails({
     const Svg = ElementImage as React.FC<SvgProps>;
     return (
       <Svg
-        width={204}
-        height={204}
+        width={180}
+        height={180}
         style={{
           position: 'absolute',
           zIndex: 0,
@@ -57,20 +59,29 @@ export default function PokemonDetails({
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: bgCard }}>
+    <View style={{ flex: 1, backgroundColor: bgCard }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={{
+            position: 'absolute',
+            top: insets.top + 12,
+            left: 16,
+            zIndex: 10,
+          }}
+        >
+          <ArrowLeft size={28} color="white" />
+        </TouchableOpacity>
         <View
-          className="rounded-b-[900px] px-4 pt-24 pb-6 items-center justify-center relative"
+          className="w-[480px] h-72 rounded-b-[300px] px-4 pb-6 items-center justify-center relative self-center"
           style={{ backgroundColor: bgColor }}
         >
           {renderElementImage()}
+        </View>
 
-          <Image
-            source={image}
-            style={{ width: 160, height: 160, zIndex: 1}}
-            resizeMode="contain"
-          />
+        {/* Imagem do Pokémon */}
+        <View className="items-center" style={{ marginTop: -110, zIndex: 10 }}>
+          <Image source={image} style={{ width: 160, height: 160 }} resizeMode="contain" />
         </View>
 
         <View className="px-8 mt-4">
@@ -80,8 +91,12 @@ export default function PokemonDetails({
           <Text className="font-poppins text-black/70 text-sm mt-2">{description}</Text>
 
           <View className="mt-12">
-            <View className="flex-row items-center gap-1">
-              <images.Pokebola width={18} height={18} />
+            <View className="flex-col gap-1">
+              <View className="flex-row items-start gap-2 mb-1">
+                <View className="w-2 h-2 rounded-full bg-red-500" />
+                <View className="w-2 h-2 rounded-full bg-yellow-400" />
+                <View className="w-2 h-2 rounded-full bg-green-500" />
+              </View>
               <Text className="font-poppinsm text-black text-2xl">Curiosidades</Text>
             </View>
 
@@ -89,6 +104,6 @@ export default function PokemonDetails({
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
