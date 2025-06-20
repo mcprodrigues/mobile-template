@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { MotiText } from 'moti';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -22,25 +22,42 @@ import { loginUser, registerUser, requestToken } from '@/services/authService';
 export default function RegisterSteps() {
   const [step, setStep] = useState(0);
   const { login } = useAuth();
-const [userId, setUserId] = useState('');
-const [accessToken, setAccessToken] = useState('');
+  const [userId, setUserId] = useState('');
+  const [accessToken, setAccessToken] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [timeLeft, setTimeLeft] = useState(60);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const isEmailValid =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
-    formData.email.trim().length <= 40;
+  const resetTimer = () => {
+    setTimeLeft(60);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
+  useEffect(() => {
+    if (step === 1) {
+      resetTimer();
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [step]);
+
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && formData.email.trim().length <= 40;
   const isTokenValid = code.every((d) => d !== '');
-
-  const isSenhaValid =
-    formData.password.trim().length >= 6 && formData.password.trim().length <= 8;
-
-  const isNomeValid =
-    formData.name.trim().length >= 3 && formData.name.trim().length <= 30;
+  const isSenhaValid = formData.password.trim().length >= 6 && formData.password.trim().length <= 8;
+  const isNomeValid = formData.name.trim().length >= 3 && formData.name.trim().length <= 30;
 
   const canProceed = () => {
     if (step === 0) return isEmailValid;
@@ -53,7 +70,6 @@ const [accessToken, setAccessToken] = useState('');
   const handleNext = async () => {
     if (step === 0) {
       if (!isEmailValid) return;
-
       try {
         setStep(4);
         await requestToken({ email: formData.email.trim() });
@@ -94,22 +110,11 @@ const [accessToken, setAccessToken] = useState('');
       };
 
       try {
-        console.log('Dados enviados para registro:', {
-          ...user,
-          password: '*'.repeat(user.password.length),
-          token: payload.token,
-        });
-
         const response = await registerUser(payload);
         const userId = response._id || response.user?._id;
         const accessToken = response.access_token;
 
-
         if (!formData.name || !formData.email || !userId) {
-          console.warn('Dados incompletos no formData ou ID ausente:', {
-            formData,
-            userId,
-          });
           return alert('Erro ao salvar usuário: dados incompletos.');
         }
 
@@ -118,14 +123,11 @@ const [accessToken, setAccessToken] = useState('');
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          accessToken: accessToken,
+          accessToken,
         });
 
-
-        console.log('Cadastro realizado com sucesso!');
         setTimeout(() => setStep(5), 1500);
       } catch (error: any) {
-        console.error('Erro ao registrar:', error?.response?.data || error.message);
         alert('Erro ao criar conta: ' + (error?.response?.data?.message || 'Tente novamente.'));
         setStep(3);
       }
@@ -139,17 +141,16 @@ const [accessToken, setAccessToken] = useState('');
       router.back();
     }
   };
-  
-    const handleResendToken = async () => {
-      try {
-        await requestToken({ email });
-        resetTimer();
-      } catch (error) {
-        console.error('Erro ao reenviar token:', error);
-        alert('Erro ao reenviar token. Tente novamente.');
-      }
-    };
-    
+
+  const handleResendToken = async () => {
+    try {
+      await requestToken({ email: formData.email });
+      resetTimer();
+    } catch (error) {
+      alert('Erro ao reenviar token. Tente novamente.');
+    }
+  };
+
   const steps = [
     {
       key: 'email',
@@ -179,6 +180,7 @@ const [accessToken, setAccessToken] = useState('');
           timeLeft={timeLeft}
           setTimeLeft={setTimeLeft}
           onContinue={handleNext}
+          onResendToken={handleResendToken}
         />
       ),
     },
@@ -202,11 +204,7 @@ const [accessToken, setAccessToken] = useState('');
             className="absolute right-4 top-1/2 -translate-y-1/2"
             onPress={() => setShowPassword((prev) => !prev)}
           >
-            {showPassword ? (
-              <EyeOff size={20} color="gray" />
-            ) : (
-              <Eye size={20} color="gray" />
-            )}
+            {showPassword ? <EyeOff size={20} color="gray" /> : <Eye size={20} color="gray" />}
           </Pressable>
         </View>
       ),
@@ -239,38 +237,22 @@ const [accessToken, setAccessToken] = useState('');
         <TouchableOpacity onPress={handleBack}>
           <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
-        <MotiText
-          from={{ opacity: 0, translateY: -10 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          key={`title-${step}`}
-          className="text-lg font-poppinssb text-black"
-        >
-          Criar conta
-        </MotiText>
+        <MotiText className="text-lg font-poppinssb text-black">Criar conta</MotiText>
         <View style={{ width: 24 }} />
       </View>
 
       <KeyboardAwareScrollView
         enableOnAndroid
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'space-between',
-          paddingHorizontal: 24,
-        }}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between', paddingHorizontal: 24 }}
       >
         {step < 4 && (
           <>
             {step === 1 ? (
-              <TokenConfirmationStep
-                email={formData.email}
-                code={code}
-                setCode={setCode}
-                timeLeft={timeLeft}
-                setTimeLeft={setTimeLeft}
-                onContinue={() => setStep(2)}
-                onResendToken={handleResendToken} 
-              />
+                <View className="flex-1 justify-between items-center w-full">
+
+                {steps[1].render()}
+              </View>
             ) : (
               <>
                 <View>
@@ -290,7 +272,7 @@ const [accessToken, setAccessToken] = useState('');
                   )}
                 </View>
 
-                <View className="mb-16">
+                <View className=" w-full items-center mb-16">
                   <Button
                     variant={canProceed() ? 'primary' : 'disabled'}
                     title={step < 3 ? 'Continuar' : 'Criar conta'}
@@ -336,20 +318,15 @@ const [accessToken, setAccessToken] = useState('');
                   email: formData.email.trim(),
                   password: formData.password,
                 });
-
-                console.log('Login realizado com sucesso:', response);
-
-await login({
-  id: userId,
-  name: formData.name,
-  email: formData.email,
-  password: formData.password,
-  accessToken,
-});
-
+                await login({
+                  id: userId,
+                  name: formData.name,
+                  email: formData.email,
+                  password: formData.password,
+                  accessToken,
+                });
                 router.push('/(tabs)');
               } catch (error) {
-                console.error('Erro ao fazer login após cadastro:', error);
                 alert('Erro ao continuar. Tente logar novamente.');
               }
             }}
