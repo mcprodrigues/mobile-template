@@ -3,6 +3,7 @@ import { MotiText } from 'moti';
 import React, { useEffect, useRef } from 'react';
 import {
   NativeSyntheticEvent,
+  Pressable,
   Text,
   TextInput,
   TextInputKeyPressEventData,
@@ -16,6 +17,8 @@ type Props = {
   timeLeft: number;
   setTimeLeft: React.Dispatch<React.SetStateAction<number>>;
   onContinue: () => void;
+  onResendToken: () => void;
+
 };
 
 export default function TokenConfirmationStep({
@@ -25,10 +28,12 @@ export default function TokenConfirmationStep({
   timeLeft,
   setTimeLeft,
   onContinue,
+  onResendToken,
 }: Props) {
   const inputs = useRef<Array<TextInput | null>>([]);
 
   useEffect(() => {
+
     setTimeLeft(60);
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -42,11 +47,14 @@ export default function TokenConfirmationStep({
     return () => clearInterval(interval);
   }, []);
 
+
   const handleChange = (text: string, index: number) => {
+    const onlyNumber = text.replace(/[^0-9]/g, '');
     const newCode = [...code];
-    newCode[index] = text;
+    newCode[index] = onlyNumber;
     setCode(newCode);
-    if (text && index < inputs.current.length - 1) {
+
+    if (onlyNumber && index < inputs.current.length - 1) {
       inputs.current[index + 1]?.focus();
     }
   };
@@ -84,31 +92,44 @@ export default function TokenConfirmationStep({
         </MotiText>
 
         <View className="flex-row justify-center gap-2 mt-6">
-          {code.map((digit, index) => (
+          {code.map((_, index) => (
             <TextInput
               key={index}
               ref={(ref) => {
                 inputs.current[index] = ref;
-              }} className="w-10 h-12 border border-zinc-400 text-center text-lg font-poppins rounded-md"
+              }}
+              style={{ color: 'black' }}
+              value={code[index]}
               maxLength={1}
-              keyboardType="number-pad"
-              value={digit}
+              keyboardType="numeric"
+              textContentType="oneTimeCode"
+              importantForAccessibility="yes"
+              className="w-10 h-12 border border-zinc-400 text-center text-lg font-poppins rounded-md"
               onChangeText={(text) => handleChange(text, index)}
               onKeyPress={(event) => handleKeyPress(event, index)}
             />
           ))}
         </View>
 
-        <Text className="text-center font-poppins text-sm text-zinc-500 mt-4">
-          Não recebeu o código?{' '}
+
+        <View className="flex-row justify-center items-center mt-4 flex-wrap">
+          <Text className="font-poppins text-sm text-zinc-500">
+            Não recebeu o código?{' '}
+          </Text>
+
           {timeLeft > 0 ? (
-            <Text className="text-zinc-500 font-poppinssb">
+            <Text className="font-poppinssb text-sm text-zinc-500">
               Reenviar em {timeLeft}s
             </Text>
           ) : (
-            <Text className="text-blue-700 font-poppinssb">Reenvie agora</Text>
+            <Pressable onPress={onResendToken}>
+              <Text className="font-poppinssb text-sm text-blue-700">
+                Reenvie agora
+              </Text>
+            </Pressable>
           )}
-        </Text>
+        </View>
+
       </View>
 
       <View className="mb-10">

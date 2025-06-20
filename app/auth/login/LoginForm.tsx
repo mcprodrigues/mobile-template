@@ -1,18 +1,53 @@
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Button } from '@/components/Button';
 import FormInput from '@/components/FormInput';
 import Header from '@/components/Header';
+
+import { useAuth } from '@/contexts/AuthContext';
+import { loginUser } from '@/services/authService';
+
 import { MotiText } from 'moti';
 
 export default function LoginForm() {
+  const { login } = useAuth();
   const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const trimmedEmail = email.trim();
+
+      console.log('Tentando login com:', {
+        email: trimmedEmail,
+        password: '*'.repeat(senha.length),
+      });
+
+      const response = await loginUser({ email: trimmedEmail, password: senha });
+
+      const userData = {
+        id: response.user._id, 
+        name: response.user.name?.trim() || 'Usuário',
+        email: response.user.email?.trim() || trimmedEmail,
+        password: senha,
+        accessToken: response.access_token,
+      };
+
+      await login(userData);
+
+      console.log('Usuário salvo no contexto:', userData);
+      router.push('/auth/login/LoginSucess');
+    } catch (error: any) {
+      console.error('Erro ao logar:', error);
+      Alert.alert('Erro', 'Credenciais inválidas ou servidor indisponível');
+    }
+  };
 
   return (
     <View className="flex-1 pt-14 bg-white">
@@ -66,7 +101,7 @@ export default function LoginForm() {
             <Button
               title="Entrar"
               variant={email && senha.length >= 6 ? 'primary' : 'disabled'}
-              onPress={() => router.push('/auth/login/LoginSucess')}
+              onPress={handleLogin}
             />
           </View>
         </View>

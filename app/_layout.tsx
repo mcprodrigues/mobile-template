@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
 import React from 'react';
@@ -18,14 +19,17 @@ export default function RootLayout() {
   if (!fontsLoaded) {
 
     return (
-      <View className='flex-1 justify-center items-center bg-white'>
-        <ActivityIndicator size='large' color="EDB24E"></ActivityIndicator>
-      </View>
+
+        <View className='flex-1 justify-center items-center bg-white'>
+          <ActivityIndicator size='large' color="EDB24E"></ActivityIndicator>
+        </View>
     )
 
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }} />
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </AuthProvider>
   );
 }
