@@ -17,7 +17,7 @@ export function getPokemonBasicDetails(name: string): PokemonBasicDetails | null
 
   if (!base || !sprite) return null;
 
-  const descriptionMap: Record<string, string> = {
+const descriptionMap: Record<string, string> = {
     cabra: 'A cabra é um animal curioso, ágil e muito adaptável. Com seu olhar esperto e comportamento brincalhão, costuma chamar atenção dos estudantes enquanto explora os arredores em busca de folhas ou sombra. Seu comportamento sociável e ativo a torna uma presença divertida no campus.',
     camaleao: 'O Lagarto, conhecido popularmente como Calango em muitas regiões do Nordeste, é um réptil pequeno e ágil. Ele possui corpo fino, escamas duras, pernas rápidas e uma longa cauda. É comum vê-lo tomando sol em muros, calçadas e pedras. Alimenta-se de insetos e pequenos animais, sendo um grande aliado no controle de pragas urbanas.',
     cavalo: 'O cavalo é símbolo de força e elegância. No campus, ele representa conexão com a natureza e com atividades ligadas ao cuidado e à educação. Sempre atento ao ambiente ao redor, o cavalo é também um grande companheiro, demonstrando empatia e sensibilidade com humanos.',
@@ -38,9 +38,9 @@ export function getPokemonBasicDetails(name: string): PokemonBasicDetails | null
     gamba: 'Apesar da má fama, o gambá é inofensivo e um grande aliado ecológico, pois ajuda no equilíbrio do ecossistema urbano.',
     gato: ' Cada gato tem um “território” preferido no campus — e geralmente conquista muitos corações por onde passa.',
     iguana: 'As iguanas têm um terceiro olho no topo da cabeça chamado "parietal", que detecta mudanças de luz e movimento — útil contra predadores.',
-    pavao: ' Apenas o pavão macho possui a cauda colorida; as fêmeas (pavoas) têm plumagem mais discreta. ',
+    pavao: 'Apenas o pavão macho possui a cauda colorida; as fêmeas (pavoas) têm plumagem mais discreta. ',
     pombo: 'Apesar de serem vistos como pragas em algumas cidades, pombos têm excelente memória espacial e já foram usados como mensageiros em guerras.',
-    vaca: 'As vacas possuem um sistema digestivo único com quatro compartimentos. Esse sistema permite que elas fermentem e reaproveitem os alimentos, facilitando a digestão completa e a extração de nutrientes, o que as torna ruminantes eficientes.',
+    vaca: 'As vacas possuem um estômago com quatro compartimentos. Esse sistema permite que elas fermentem e reaproveitem os alimentos, facilitando a digestão completa e a extração de nutrientes, o que as torna ruminantes eficientes.',
   };
 
 return {

@@ -1,7 +1,7 @@
 import PokemonCard from '@/components/PokemonCard';
 import { images } from '@/constants/images';
 import { initialPokemons } from '@/constants/initialPokemons';
-import { useRouter } from 'expo-router'; // ✅ Importar o router
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 

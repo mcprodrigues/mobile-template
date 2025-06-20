@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Pokedex_Unifor",
+    "name": "Pokédex Unifor",
     "slug": "Pokedex_Unifor",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,9 +11,9 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.mariaclara.pokedex",
+      "package": "com.mcprodrigues.pokedex",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/images.png",
+        "foregroundImage": "./assets/images/splashscreen_logo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
