@@ -1,9 +1,9 @@
 import RevealAnimation from '@/components/RevealAnimation';
 import { pokemons } from '@/constants/pokemons';
 import { apiToInternalNameMap, getDisplayName } from '@/utils/getDisplayName';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');
@@ -93,6 +93,14 @@ const { name: animalName } = useLocalSearchParams();
               <View className="w-3 h-3 bg-yellow-200 rounded-full mb-3 mr-2" />
             </View>
           </View>
+<TouchableOpacity
+  onPress={() => router.push('/pokedex')}
+  className="mt-6"
+>
+  <Text className="text-center text-blue-600 underline font-poppins">
+    Prosseguir
+  </Text>
+</TouchableOpacity>
 
         </View>
       </View>

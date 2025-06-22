@@ -5,11 +5,42 @@ import React, { useRef, useState } from 'react';
 import { Alert, Dimensions, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 
+import { initialPokemons } from '@/constants/initialPokemons';
 import { useAuth } from '@/contexts/AuthContext';
-import { getDisplayName } from '@/utils/getDisplayName';
+import { apiToInternalNameMap, getDisplayName } from '@/utils/getDisplayName';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
+const STORAGE_KEY = 'capturedPokemons';
+
+async function markPokemonAsFound(apiName: string) {
+  try {
+    const internalName = apiToInternalNameMap[apiName];
+    if (!internalName) {
+      console.warn('⚠️ Nome não mapeado:', apiName);
+      return;
+    }
+
+    const stored = await AsyncStorage.getItem(STORAGE_KEY);
+    const pokemons = stored ? JSON.parse(stored) : initialPokemons;
+
+    const alreadyCaptured = pokemons.find((p: any) => p.name === internalName && p.isFound);
+    if (alreadyCaptured) {
+      console.log('🔁 Pokémon já capturado:', internalName);
+      return;
+    }
+
+    const updated = pokemons.map((p: any) =>
+      p.name === internalName ? { ...p, isFound: true } : p
+    );
+
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    console.log('✅ Pokémon marcado como encontrado:', internalName);
+  } catch (err) {
+    console.error('❌ Erro ao marcar Pokémon como encontrado:', err);
+  }
+}
 
 export default function Index() {
   const { user } = useAuth();
@@ -19,7 +50,7 @@ export default function Index() {
   const [showUncertainModal, setShowUncertainModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [identifiedAnimal, setIdentifiedAnimal] = useState('');
-  const [confidence, setConfidence] = useState<number | null>(null); // 👈 novo estado
+  const [confidence, setConfidence] = useState<number | null>(null);
 
   const handleToggleFacing = () => {
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'));
@@ -55,10 +86,9 @@ export default function Index() {
         setShowUncertainModal(true);
       } else {
         setIdentifiedAnimal(result.prediction);
-        setConfidence(result.confidence); // 👈 salva confiança
+        setConfidence(result.confidence);
         setShowConfirmModal(true);
       }
-
     } catch (err) {
       console.error('Erro ao capturar/enviar imagem:', err);
       Alert.alert('Erro', 'Falha ao processar a imagem.');
@@ -103,10 +133,9 @@ export default function Index() {
         setShowUncertainModal(true);
       } else {
         setIdentifiedAnimal(data.prediction);
-        setConfidence(data.confidence); // 👈 salva confiança
+        setConfidence(data.confidence);
         setShowConfirmModal(true);
       }
-
     } catch (error) {
       console.error('Erro ao importar imagem da galeria:', error);
       Alert.alert('Erro', 'Não foi possível processar a imagem da galeria.');
@@ -142,7 +171,6 @@ export default function Index() {
 
       {/* Área da Pokédex */}
       <View className="w-[320px] rounded-bl-[60px] border-[2px] border-black items-center pt-3 px-3 space-y-3 overflow-hidden bg-white">
-        {/* Luzes vermelhas pequenas */}
         <View className="flex-row gap-3 mb-2">
           <View className="w-3 h-3 rounded-full bg-red-500">
             <View className="w-1 h-1 bg-white/60 rounded-full ml-0.5 mt-0.5" />
@@ -152,7 +180,6 @@ export default function Index() {
           </View>
         </View>
 
-        {/* Câmera */}
         <View className="aspect-[3/4] w-full border border-black rounded-2xl overflow-hidden" style={{ borderRadius: 16 }}>
           <Camera ref={cameraRef} facing={facing} />
         </View>
@@ -172,22 +199,6 @@ export default function Index() {
           <TouchableOpacity onPress={handleToggleFacing}>
             <SwitchCamera color="black" size={28} />
           </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Rodapé */}
-      <View className="flex-row items-center justify-between w-full px-8">
-        <View className="w-8 h-8 bg-gray-700 rounded-full">
-          <View className="w-2 h-2 bg-white/60 rounded-full ml-1 mt-1" />
-        </View>
-        <View className="flex-row pl-6 gap-4">
-          <View className="w-20 h-2 bg-red-500 rounded-full border border-black" />
-          <View className="w-20 h-2 bg-blue-600 rounded-full border border-black" />
-        </View>
-        <View className="w-20 h-20 justify-center items-center">
-          <View className="absolute w-14 h-4 bg-gray-800 rounded" />
-          <View className="absolute h-14 w-4 bg-gray-800 rounded" />
-          <View className="w-4 h-4 bg-black rounded-full z-10" />
         </View>
       </View>
 
@@ -215,7 +226,6 @@ export default function Index() {
         <Pressable className="flex-1 bg-black/50 justify-end" onPress={() => setShowConfirmModal(false)}>
           <View className="bg-white rounded-t-2xl px-6 pt-4 pb-8">
             <View className="h-1 w-10 bg-zinc-300 self-center rounded-full mb-4" />
-
             <Text className="text-center text-black font-poppinssb text-base mb-3">
               Animal identificado: {getDisplayName(identifiedAnimal)}
             </Text>
@@ -251,6 +261,7 @@ export default function Index() {
                   const resText = await response.text();
                   console.log('📥 Resposta da API de captura:', resText);
 
+                  await markPokemonAsFound(identifiedAnimal);
                 } catch (error) {
                   console.error('❌ Erro ao enviar captura:', error);
                 }
@@ -264,12 +275,9 @@ export default function Index() {
               <Text className="text-white font-poppinssb">Sim, prosseguir</Text>
             </TouchableOpacity>
 
-
             <TouchableOpacity
               className="border border-black rounded-full py-3 items-center"
-              onPress={() => {
-                setShowConfirmModal(false);
-              }}
+              onPress={() => setShowConfirmModal(false)}
             >
               <Text className="text-black font-poppinssb">Não, tentar novamente</Text>
             </TouchableOpacity>

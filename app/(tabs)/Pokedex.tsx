@@ -1,8 +1,9 @@
 import PokemonCard from '@/components/PokemonCard';
 import { images } from '@/constants/images';
 import { initialPokemons } from '@/constants/initialPokemons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 
 const nameMap: Record<string, string> = {
@@ -18,13 +19,50 @@ const nameMap: Record<string, string> = {
   vaca: 'Vaca',
 };
 
+const STORAGE_KEY = 'capturedPokemons';
+
 function formatPokemonName(name: string) {
   return nameMap[name] ?? name.charAt(0).toUpperCase() + name.slice(1);
 }
 
 export default function Pokedex() {
   const [pokemons, setPokemons] = useState(initialPokemons);
-  const router = useRouter(); 
+  const router = useRouter();
+  const { name } = useLocalSearchParams<{ name?: string }>();
+
+  // Carrega do AsyncStorage sempre que a tela estiver em foco
+  useFocusEffect(
+    useCallback(() => {
+      const loadPokemons = async () => {
+        try {
+          const stored = await AsyncStorage.getItem(STORAGE_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            console.log('📦 Pokémons carregados ao focar:', parsed);
+            setPokemons(parsed);
+          } else {
+            setPokemons(initialPokemons);
+          }
+        } catch (err) {
+          console.error('❌ Erro ao carregar pokémons:', err);
+          setPokemons(initialPokemons);
+        }
+      };
+
+      loadPokemons();
+    }, [])
+  );
+
+  // Marca como encontrado se a rota tiver parâmetro ?name=cabra
+  useEffect(() => {
+    if (name) {
+      setPokemons((prev) =>
+        prev.map((p) =>
+          p.name === name ? { ...p, isFound: true } : p
+        )
+      );
+    }
+  }, [name]);
 
   function handleCapture(name: string, isFound: boolean) {
     if (isFound) {
@@ -32,12 +70,6 @@ export default function Pokedex() {
         pathname: '/(details)/[name]',
         params: { name },
       });
-    } else {
-      setPokemons((oldPokemons) =>
-        oldPokemons.map((p) =>
-          p.name === name ? { ...p, isFound: true } : p
-        )
-      );
     }
   }
 
