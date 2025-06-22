@@ -16,7 +16,7 @@ function normalizeKey(key: string) {
 }
 
 export default function Discovery() {
-const { name: animalName } = useLocalSearchParams();
+  const { name: animalName } = useLocalSearchParams();
 
   const rawName = animalName?.toString() || '';
   const mappedName = apiToInternalNameMap[rawName] || rawName;
@@ -93,14 +93,14 @@ const { name: animalName } = useLocalSearchParams();
               <View className="w-3 h-3 bg-yellow-200 rounded-full mb-3 mr-2" />
             </View>
           </View>
-<TouchableOpacity
-  onPress={() => router.push('/pokedex')}
-  className="mt-6"
->
-  <Text className="text-center text-blue-600 underline font-poppins">
-    Prosseguir
-  </Text>
-</TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push('/pokedex')}
+            className="mt-6"
+          >
+            <Text className="text-center text-blue-600 underline font-poppins">
+              Prosseguir
+            </Text>
+          </TouchableOpacity>
 
         </View>
       </View>

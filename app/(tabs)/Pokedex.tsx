@@ -30,7 +30,6 @@ export default function Pokedex() {
   const router = useRouter();
   const { name } = useLocalSearchParams<{ name?: string }>();
 
-  // Carrega do AsyncStorage sempre que a tela estiver em foco
   useFocusEffect(
     useCallback(() => {
       const loadPokemons = async () => {
@@ -53,7 +52,6 @@ export default function Pokedex() {
     }, [])
   );
 
-  // Marca como encontrado se a rota tiver parâmetro ?name=cabra
   useEffect(() => {
     if (name) {
       setPokemons((prev) =>
