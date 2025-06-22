@@ -12,7 +12,7 @@ const nameMap: Record<string, string> = {
   vaca: 'Vaca',
 };
 
-const apiToInternalNameMap: Record<string, string> = {
+export const apiToInternalNameMap: Record<string, string> = {
   possum: 'gamba',
   lizard: 'lagarto',
   peacock: 'pavao',
@@ -24,6 +24,8 @@ const apiToInternalNameMap: Record<string, string> = {
   iguana: 'iguana',
   cow: 'vaca',
 };
+
+
 
 export function getDisplayName(apiName: string, isFound: boolean = true): string {
   if (!isFound) return '???';

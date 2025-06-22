@@ -32,7 +32,7 @@ const TabIcon = ({ focused, label, iconActive: IconActive, iconInactive: IconIna
 export default function _Layout() {
   return (
     <Tabs
-      backBehavior="history"  
+      backBehavior="history"
       screenOptions={{
         tabBarShowLabel: false,
         headerShown: false,
@@ -56,6 +56,20 @@ export default function _Layout() {
         name="index"
         options={{
           tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              label="Início"
+              iconActive={TabIcons.index.active}
+              iconInactive={TabIcons.index.inactive}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="discovery"
+        options={{
+          href: null,
+                    tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
               label="Início"

@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import {
   CameraCapturedPicture,
   CameraView,
@@ -26,6 +27,7 @@ export type CameraHandler = {
 const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
+  const isFocused = useIsFocused(); 
 
   useImperativeHandle(ref, () => ({
     takePicture: async () => {
@@ -57,11 +59,14 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
 
   return (
     <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        style={StyleSheet.absoluteFillObject}
-        facing={facing}
-      />
+      {/* Só renderiza a câmera se a tela estiver visível */}
+      {isFocused && (
+        <CameraView
+          ref={cameraRef}
+          style={StyleSheet.absoluteFillObject}
+          facing={facing}
+        />
+      )}
     </View>
   );
 });

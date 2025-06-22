@@ -1,7 +1,7 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
-export default function Dashboard(){
+const Dashboard = () => {
   return (
     <View>
       <Text>Dashboard</Text>
@@ -9,4 +9,6 @@ export default function Dashboard(){
   )
 }
 
+export default Dashboard
 
+const styles = StyleSheet.create({})

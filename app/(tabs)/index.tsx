@@ -5,19 +5,21 @@ import React, { useRef, useState } from 'react';
 import { Alert, Dimensions, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 
+import { useAuth } from '@/contexts/AuthContext';
 import { getDisplayName } from '@/utils/getDisplayName';
-
-
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
 export default function Index() {
+  const { user } = useAuth();
   const [facing, setFacing] = useState<'front' | 'back'>('back');
   const cameraRef = useRef<CameraHandler>(null);
 
   const [showUncertainModal, setShowUncertainModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [identifiedAnimal, setIdentifiedAnimal] = useState('');
+  const [confidence, setConfidence] = useState<number | null>(null); // 👈 novo estado
 
   const handleToggleFacing = () => {
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'));
@@ -38,7 +40,7 @@ export default function Index() {
         type: 'image/jpeg',
       } as any);
 
-      const response = await fetch('http://192.168.1.197:5000/prediction', {
+      const response = await fetch('http://192.168.1.200:5000/prediction', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -48,10 +50,12 @@ export default function Index() {
 
       const result = await response.json();
       console.log('🐾 Animal detectado:', result);
+
       if (result.prediction === 'uncertain') {
         setShowUncertainModal(true);
       } else {
-        setIdentifiedAnimal(getDisplayName(result.prediction));
+        setIdentifiedAnimal(result.prediction);
+        setConfidence(result.confidence); // 👈 salva confiança
         setShowConfirmModal(true);
       }
 
@@ -85,7 +89,7 @@ export default function Index() {
         type: 'image/jpeg',
       } as any);
 
-      const response = await fetch('http://192.168.1.197:5000/prediction', {
+      const response = await fetch('http://192.168.1.200:5000/prediction', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -98,7 +102,8 @@ export default function Index() {
       if (data.prediction === 'uncertain') {
         setShowUncertainModal(true);
       } else {
-        setIdentifiedAnimal(getDisplayName(data.prediction));
+        setIdentifiedAnimal(data.prediction);
+        setConfidence(data.confidence); // 👈 salva confiança
         setShowConfirmModal(true);
       }
 
@@ -153,12 +158,10 @@ export default function Index() {
         </View>
 
         <View className="flex-row justify-between items-center w-full px-6 m-2">
-          {/* Botão galeria */}
           <TouchableOpacity onPress={handlePickFromGallery}>
             <Image color="black" size={28} />
           </TouchableOpacity>
 
-          {/* Botão de tirar foto */}
           <TouchableOpacity
             onPress={handleTakePicture}
             className="w-16 h-16 rounded-full bg-blue-700 border-[4px] border-blue-800 items-center justify-center"
@@ -166,7 +169,6 @@ export default function Index() {
             <View className="w-4 h-4 bg-white/60 rounded-full mr-4 mb-8" />
           </TouchableOpacity>
 
-          {/* Botão de trocar câmera */}
           <TouchableOpacity onPress={handleToggleFacing}>
             <SwitchCamera color="black" size={28} />
           </TouchableOpacity>
@@ -188,28 +190,18 @@ export default function Index() {
           <View className="w-4 h-4 bg-black rounded-full z-10" />
         </View>
       </View>
-      <Modal
-        visible={showUncertainModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowUncertainModal(false)}
-      >
-        <Pressable
-          className="flex-1 bg-black/50 justify-end"
-          onPress={() => setShowUncertainModal(false)}
-        >
+
+      {/* Modal de incerteza */}
+      <Modal visible={showUncertainModal} transparent animationType="fade" onRequestClose={() => setShowUncertainModal(false)}>
+        <Pressable className="flex-1 bg-black/50 justify-end" onPress={() => setShowUncertainModal(false)}>
           <View className="bg-white rounded-t-2xl px-6 pt-4 pb-8">
             <View className="h-1 w-10 bg-zinc-300 self-center rounded-full mb-4" />
             <Text className="text-center text-black font-poppinssb text-base mb-6">
               Não foi possível identificar o animal
             </Text>
-
             <TouchableOpacity
               className="bg-blue-900 rounded-full py-3 items-center flex-row justify-center gap-2 mb-4"
-              onPress={() => {
-                setShowUncertainModal(false);
-                
-              }}
+              onPress={() => setShowUncertainModal(false)}
             >
               <RotateCw size={18} color="white" />
               <Text className="text-white font-poppinssb">Tentar novamente</Text>
@@ -218,52 +210,72 @@ export default function Index() {
         </Pressable>
       </Modal>
 
-      <Modal
-  visible={showConfirmModal}
-  transparent
-  animationType="fade"
-  onRequestClose={() => setShowConfirmModal(false)}
->
-  <Pressable
-    className="flex-1 bg-black/50 justify-end"
-    onPress={() => setShowConfirmModal(false)}
-  >
-    <View className="bg-white rounded-t-2xl px-6 pt-4 pb-8">
-      <View className="h-1 w-10 bg-zinc-300 self-center rounded-full mb-4" />
+      {/* Modal de confirmação */}
+      <Modal visible={showConfirmModal} transparent animationType="fade" onRequestClose={() => setShowConfirmModal(false)}>
+        <Pressable className="flex-1 bg-black/50 justify-end" onPress={() => setShowConfirmModal(false)}>
+          <View className="bg-white rounded-t-2xl px-6 pt-4 pb-8">
+            <View className="h-1 w-10 bg-zinc-300 self-center rounded-full mb-4" />
 
-      <Text className="text-center text-black font-poppinssb text-base mb-3">
-        Animal identificado: {identifiedAnimal}
-      </Text>
-      <Text className="text-center text-black font-poppins text-sm mb-6">
-        Essa previsão está correta?
-      </Text>
+            <Text className="text-center text-black font-poppinssb text-base mb-3">
+              Animal identificado: {getDisplayName(identifiedAnimal)}
+            </Text>
+            <Text className="text-center text-black font-poppins text-sm mb-6">
+              Essa previsão está correta?
+            </Text>
 
-      {/* Botão SIM */}
-      <TouchableOpacity
-        className="bg-blue-900 rounded-full py-3 items-center mb-4"
-        onPress={() => {
-          setShowConfirmModal(false);
-          
-        }}
-      >
-        <Text className="text-white font-poppinssb">Sim, prosseguir</Text>
-      </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-blue-900 rounded-full py-3 items-center mb-4"
+              onPress={async () => {
+                setShowConfirmModal(false);
 
-      {/* Botão NÃO */}
-      <TouchableOpacity
-        className="border border-black rounded-full py-3 items-center"
-        onPress={() => {
-          setShowConfirmModal(false);
-        }}
-      >
-        <Text className="text-black font-poppinssb">Não, tentar novamente</Text>
-      </TouchableOpacity>
+                const payload = {
+                  prediction: identifiedAnimal,
+                  confidence: confidence ?? 0,
+                };
+
+                const token = user?.accessToken;
+
+                console.log('📤 Enviando dados para captura:', payload);
+                console.log('🔐 Token de autenticação usado:', token);
+
+                try {
+                  const response = await fetch('http://192.168.1.200:3000/image-processing/capture', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                  });
+
+                  const resText = await response.text();
+                  console.log('📥 Resposta da API de captura:', resText);
+
+                } catch (error) {
+                  console.error('❌ Erro ao enviar captura:', error);
+                }
+
+                router.push({
+                  pathname: '/discovery',
+                  params: { name: identifiedAnimal },
+                });
+              }}
+            >
+              <Text className="text-white font-poppinssb">Sim, prosseguir</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              className="border border-black rounded-full py-3 items-center"
+              onPress={() => {
+                setShowConfirmModal(false);
+              }}
+            >
+              <Text className="text-black font-poppinssb">Não, tentar novamente</Text>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
-  </Pressable>
-</Modal>
-
-
-    </View>
-
   );
 }

@@ -30,7 +30,7 @@ export default function LoginForm() {
       });
 
       const response = await loginUser({ email: trimmedEmail, password: senha });
-
+      console.log(response)
       const userData = {
         id: response.user._id, 
         name: response.user.name?.trim() || 'Usuário',
