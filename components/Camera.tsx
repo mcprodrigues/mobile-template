@@ -1,16 +1,41 @@
-import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
-import { useRef, useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  CameraCapturedPicture,
+  CameraView,
+  useCameraPermissions,
+} from 'expo-camera';
+import {
+  forwardRef,
+  useImperativeHandle,
+  useRef
+} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
 type CameraProps = {
   facing: 'front' | 'back';
 };
 
-export default function Camera({ facing }: CameraProps) {
+export type CameraHandler = {
+  takePicture: () => Promise<CameraCapturedPicture | null>;
+};
+
+const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
-  const [photo, setPhoto] = useState<CameraCapturedPicture | null>(null);
 
+  useImperativeHandle(ref, () => ({
+    takePicture: async () => {
+      if (cameraRef.current) {
+        const picture = await cameraRef.current.takePictureAsync();
+        return picture;
+      }
+      return null;
+    },
+  }));
 
   if (!permission) {
     return <Text className="text-center mt-10">Verificando permissões...</Text>;
@@ -30,26 +55,18 @@ export default function Camera({ facing }: CameraProps) {
     );
   }
 
-  const handleTakePhoto = async () => {
-    if (cameraRef.current) {
-      const picture = await cameraRef.current.takePictureAsync();
-      setPhoto(picture);
-      Alert.alert('Foto capturada!', `Salva em: ${picture.uri}`);
-    }
-  };
-
-
-
   return (
     <View style={styles.container}>
       <CameraView
         ref={cameraRef}
-        style={StyleSheet.absoluteFillObject} 
+        style={StyleSheet.absoluteFillObject}
         facing={facing}
       />
     </View>
   );
-}
+});
+
+export default Camera;
 
 const styles = StyleSheet.create({
   container: {

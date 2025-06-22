@@ -12,8 +12,23 @@ const nameMap: Record<string, string> = {
   vaca: 'Vaca',
 };
 
-export function getDisplayName(name: string, isFound: boolean = true): string {
+const apiToInternalNameMap: Record<string, string> = {
+  possum: 'gamba',
+  lizard: 'lagarto',
+  peacock: 'pavao',
+  ostrich: 'ema',
+  pigeon: 'pombo',
+  goat: 'cabra',
+  horse: 'cavalo',
+  cat: 'gato',
+  iguana: 'iguana',
+  cow: 'vaca',
+};
+
+export function getDisplayName(apiName: string, isFound: boolean = true): string {
   if (!isFound) return '???';
-  return nameMap[name] ?? name.charAt(0).toUpperCase() + name.slice(1);
+
+  const internalName = apiToInternalNameMap[apiName] ?? apiName;
+  return nameMap[internalName] ?? internalName.charAt(0).toUpperCase() + internalName.slice(1);
 }
 
