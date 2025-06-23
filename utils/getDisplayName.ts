@@ -1,7 +1,7 @@
-
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Lagarto',
+  camaleao: 'Camaleão',
+  lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
@@ -14,17 +14,31 @@ const nameMap: Record<string, string> = {
 
 export const apiToInternalNameMap: Record<string, string> = {
   possum: 'gamba',
+  chameleon: 'camaleao',
   lizard: 'lagarto',
   peacock: 'pavao',
   ostrich: 'ema',
   pigeon: 'pombo',
-  goat: 'cabra',
+  goat: 'bode',
   horse: 'cavalo',
   cat: 'gato',
   iguana: 'iguana',
   cow: 'vaca',
 };
 
+export const internalToBadgeNameMap: Record<string, string> = {
+  gamba: 'Gamba',
+  camaleao: 'Camaleão',
+  lagarto: 'Lagarto',
+  pavao: 'Pavão',
+  ema: 'Ema',
+  pombo: 'Pombo',
+  bode: 'Bode',
+  cavalo: 'Cavalo',
+  gato: 'Gato',
+  iguana: 'Iguana',
+  vaca: 'Vaca',
+};
 
 
 export function getDisplayName(apiName: string, isFound: boolean = true): string {

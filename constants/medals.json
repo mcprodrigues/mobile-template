@@ -1,0 +1,272 @@
+{
+  "Gato": [
+    {
+      "level": 1,
+      "title": "Primeiro Ronronar",
+      "description": "Você capturou seu primeiro felino! Esperto e elegante. (Capturou 1 gato)"
+    },
+    {
+      "level": 10,
+      "title": "Caçador de Bigodes",
+      "description": "Dez gatos avistados. Suas nove vidas já estão correndo perigo. (Capturou 10 gatos)"
+    },
+    {
+      "level": 25,
+      "title": "Mestre do Miau",
+      "description": "Você entende o idioma do miado. Quase um tradutor felino. (Capturou 25 gatos)"
+    },
+    {
+      "level": 50,
+      "title": "Gato-Guru",
+      "description": "Já pode ensinar gatos a fazer ioga. Ou não. (Capturou 50 gatos)"
+    },
+    {
+      "level": 100,
+      "title": "Senhor dos Felinos",
+      "description": "O mundo agora é um grande arranhador sob seu comando. (Capturou 100 gatos)"
+    }
+  ],
+  "Pombo": [
+    {
+      "level": 1,
+      "title": "Primeiro Voo Urbano",
+      "description": "Você registrou o mensageiro da cidade. (Capturou 1 pombo)"
+    },
+    {
+      "level": 10,
+      "title": "Domador de Praças",
+      "description": "Os pombos já te reconhecem. Cuidado com o ombro. (Capturou 10 pombos)"
+    },
+    {
+      "level": 25,
+      "title": "Espião de Telhados",
+      "description": "Você os vê antes que eles te vejam. Ou quase. (Capturou 25 pombos)"
+    },
+    {
+      "level": 50,
+      "title": "Mestre do Milho",
+      "description": "Seu nome já ecoa entre os bandos das avenidas. (Capturou 50 pombos)"
+    },
+    {
+      "level": 100,
+      "title": "Rei dos Pombos",
+      "description": "A cidade agora te pertence. Cuidado onde pisa. (Capturou 100 pombos)"
+    }
+  ],
+  "Ema": [
+    {
+      "level": 1,
+      "title": "A Grande Corrida Começa",
+      "description": "Primeira ema capturada! Rápida, mas não o bastante pra você. (Capturou 1 ema)"
+    },
+    {
+      "level": 10,
+      "title": "Rastreador do Sertão",
+      "description": "As emas já estão te notando. E fugindo. (Capturou 10 emas)"
+    },
+    {
+      "level": 25,
+      "title": "Corredor de Penugem",
+      "description": "Você segue a trilha das penas com precisão. (Capturou 25 emas)"
+    },
+    {
+      "level": 50,
+      "title": "Vento nas Pernas",
+      "description": "Você quase voa junto com elas agora. (Capturou 50 emas)"
+    },
+    {
+      "level": 100,
+      "title": "Senhor das Emas",
+      "description": "As planícies se curvam aos seus passos ligeiros. (Capturou 100 emas)"
+    }
+  ],
+  "Pavão": [
+    {
+      "level": 1,
+      "title": "Brilho Inesperado",
+      "description": "Você capturou uma explosão de cor em penas. (Capturou 1 pavão)"
+    },
+    {
+      "level": 10,
+      "title": "Esteta das Aves",
+      "description": "Beleza em movimento. E você registrou tudo. (Capturou 10 pavões)"
+    },
+    {
+      "level": 25,
+      "title": "Desfile Real",
+      "description": "Os pavões desfilam só pra você agora. (Capturou 25 pavões)"
+    },
+    {
+      "level": 50,
+      "title": "Arquiteto da Elegância",
+      "description": "Você entende o glamour da natureza. (Capturou 50 pavões)"
+    },
+    {
+      "level": 100,
+      "title": "Imperador do Esplendor",
+      "description": "Realeza alada te reconhece como um igual. (Capturou 100 pavões)"
+    }
+  ],
+  "Gamba": [
+    {
+      "level": 1,
+      "title": "A Primeira Fumaça",
+      "description": "Você chegou perto... muito perto. (Capturou 1 gambá)"
+    },
+    {
+      "level": 10,
+      "title": "Vigarista Noturno",
+      "description": "Gambás capturados e você ainda tem olfato. (Capturou 10 gambás)"
+    },
+    {
+      "level": 25,
+      "title": "Mestre do Fedor",
+      "description": "Nem todo herói usa capa, alguns usam cheiro. (Capturou 25 gambás)"
+    },
+    {
+      "level": 50,
+      "title": "Lenda das Trilhas Fétidas",
+      "description": "Você vê o que ninguém quer ver (ou cheirar). (Capturou 50 gambás)"
+    },
+    {
+      "level": 100,
+      "title": "Chefe dos Gambás",
+      "description": "Chegou onde poucos ousam. Literalmente. (Capturou 100 gambás)"
+    }
+  ],
+  "Lagarto": [
+    {
+      "level": 1,
+      "title": "Pequeno Escamado",
+      "description": "Você encontrou o mestre do sol e da pedra. (Capturou 1 lagarto)"
+    },
+    {
+      "level": 10,
+      "title": "Observador Reptiliano",
+      "description": "Olhos atentos registrando cada escama. (Capturou 10 lagartos)"
+    },
+    {
+      "level": 25,
+      "title": "Rasteiro Rápido",
+      "description": "Lagartos não escapam mais do seu radar. (Capturou 25 lagartos)"
+    },
+    {
+      "level": 50,
+      "title": "Guardião do Calor",
+      "description": "Você conhece os segredos do chão quente. (Capturou 50 lagartos)"
+    },
+    {
+      "level": 100,
+      "title": "Senhor dos Lagartos",
+      "description": "Nada se move sob o sol sem você ver. (Capturou 100 lagartos)"
+    }
+  ],
+"Iguana": [
+  {
+    "level": 1,
+    "title": "Primeiro Sol Escamado",
+    "description": "Você registrou sua primeira iguana, mestra da tranquilidade. (Capturou 1 iguana)"
+  },
+  {
+    "level": 10,
+    "title": "Explorador das Rochas",
+    "description": "Dez iguanas encontradas. O calor é seu aliado. (Capturou 10 iguanas)"
+  },
+  {
+    "level": 25,
+    "title": "Guardião do Verde",
+    "description": "Você conhece todos os cantos onde elas se escondem. (Capturou 25 iguanas)"
+  },
+  {
+    "level": 50,
+    "title": "Rei dos Galhos",
+    "description": "Você já caminha pelas árvores como elas. (Capturou 50 iguanas)"
+  },
+  {
+    "level": 100,
+    "title": "Sábio Escamoso",
+    "description": "Você atingiu a paz de espírito dos répteis tropicais. (Capturou 100 iguanas)"
+  }
+],
+  "Cabra": [
+    {
+      "level": 1,
+      "title": "O Primeiro Berrante",
+      "description": "Bodes são mais malandros do que parecem. Primeiro pego! (Capturou 1 bode)"
+    },
+    {
+      "level": 10,
+      "title": "Escalador de Morros",
+      "description": "Você segue o cheiro forte e a coragem. (Capturou 10 bodes)"
+    },
+    {
+      "level": 25,
+      "title": "Mestre do Chifre",
+      "description": "Poucos capturam tantos sem levar chifrada. (Capturou 25 bodes)"
+    },
+    {
+      "level": 50,
+      "title": "Pastor Indomável",
+      "description": "Seus caminhos cruzam os deles. Sempre. (Capturou 50 bodes)"
+    },
+    {
+      "level": 100,
+      "title": "Sumo Bodeador",
+      "description": "Você agora comanda o rebanho dos rebeldes. (Capturou 100 bodes)"
+    }
+  ],
+  "Cavalo": [
+    {
+      "level": 1,
+      "title": "Relincho Inaugural",
+      "description": "Você capturou elegância e força em um só clique. (Capturou 1 cavalo)"
+    },
+    {
+      "level": 10,
+      "title": "Cavaleiro da Lente",
+      "description": "Um laço entre velocidade e visão. (Capturou 10 cavalos)"
+    },
+    {
+      "level": 25,
+      "title": "Viajante de Crina ao Vento",
+      "description": "Você e eles compartilham a liberdade. (Capturou 25 cavalos)"
+    },
+    {
+      "level": 50,
+      "title": "Guardião da Estalagem Selvagem",
+      "description": "Sua galeria já parece um haras. (Capturou 50 cavalos)"
+    },
+    {
+      "level": 100,
+      "title": "Cavalgador Fantasma",
+      "description": "Você virou lenda entre cascos e poeira. (Capturou 100 cavalos)"
+    }
+  ],
+  "Vaca": [
+    {
+      "level": 1,
+      "title": "Primeira Ruminante",
+      "description": "Você encontrou serenidade com quatro estômagos. (Capturou 1 vaca)"
+    },
+    {
+      "level": 10,
+      "title": "Amante dos Pastos",
+      "description": "A vida simples tem sua beleza. E você sabe disso. (Capturou 10 vacas)"
+    },
+    {
+      "level": 25,
+      "title": "Guardião do Muuuu",
+      "description": "Você escuta o pasto falando contigo. (Capturou 25 vacas)"
+    },
+    {
+      "level": 50,
+      "title": "Pastor da Calma",
+      "description": "Seus registros passam paz e leite. (Capturou 50 vacas)"
+    },
+    {
+      "level": 100,
+      "title": "Muu-dador de Realidade",
+      "description": "Agora você vê arte onde todos veem só pasto. (Capturou 100 vacas)"
+    }
+  ]
+}
