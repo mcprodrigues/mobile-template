@@ -19,7 +19,7 @@ export const apiToInternalNameMap: Record<string, string> = {
   peacock: 'pavao',
   ostrich: 'ema',
   pigeon: 'pombo',
-  goat: 'bode',
+  goat: 'cabra',
   horse: 'cavalo',
   cat: 'gato',
   iguana: 'iguana',

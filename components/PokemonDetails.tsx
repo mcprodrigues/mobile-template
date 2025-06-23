@@ -76,46 +76,46 @@ export default function PokemonDetails({
     );
   };
 
-useEffect(() => {
-  const loadData = async () => {
-    const historyJson = await AsyncStorage.getItem('captureHistory');
-    const history = JSON.parse(historyJson || '[]');
+  useEffect(() => {
+    const loadData = async () => {
+      const historyJson = await AsyncStorage.getItem('captureHistory');
+      const history = JSON.parse(historyJson || '[]');
 
-    const internalToBadgeNameMap: Record<string, string> = {
-      pavao: 'Pavão',
-      gato: 'Gato',
-      vaca: 'Vaca',
-      gamba: 'Gamba',
-      iguana: 'Iguana',
-      camaleao: 'Camaleão',
-      lagarto: 'Lagarto',
-      bode: 'Bode',
-      cavalo: 'Cavalo',
-      ema: 'Ema',
-      pombo: 'Pombo',
+      const internalToBadgeNameMap: Record<string, string> = {
+        pavao: 'Pavão',
+        gato: 'Gato',
+        vaca: 'Vaca',
+        gamba: 'Gamba',
+        iguana: 'Iguana',
+        camaleao: 'Camaleão',
+        lagarto: 'Lagarto',
+        bode: 'Bode',
+        cavalo: 'Cavalo',
+        ema: 'Ema',
+        pombo: 'Pombo',
+      };
+
+      const internalName = name; // ex: "pavao"
+      const badgeKey = internalToBadgeNameMap[internalName];
+
+      if (!badgeKey) {
+        console.warn('⚠️ Espécie não mapeada para medalhas:', internalName);
+        return;
+      }
+
+      const count = history.filter((h: any) => {
+        const internal = apiToInternalNameMap[h.animal.name];
+        return internal === internalName;
+      }).length;
+
+      const allMedals = medalsJson[badgeKey] || [];
+
+      setCaptured(count);
+      setMedals(allMedals);
     };
 
-    const internalName = name; // ex: "pavao"
-    const badgeKey = internalToBadgeNameMap[internalName];
-
-    if (!badgeKey) {
-      console.warn('⚠️ Espécie não mapeada para medalhas:', internalName);
-      return;
-    }
-
-    const count = history.filter((h: any) => {
-      const internal = apiToInternalNameMap[h.animal.name];
-      return internal === internalName;
-    }).length;
-
-    const allMedals = medalsJson[badgeKey] || [];
-
-    setCaptured(count);
-    setMedals(allMedals);
-  };
-
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
 
   return (
@@ -181,10 +181,10 @@ useEffect(() => {
                     </View>
 
                     <View className="ml-3 items-center">
-<Trophy size={20} color={unlocked ? '#facc15' : '#a1a1aa'} />
-<Text className="text-xs text-black">
-  {Math.min(captured, medal.level)}/{medal.level}
-</Text>
+                      <Trophy size={20} color={unlocked ? '#facc15' : '#a1a1aa'} />
+                      <Text className="text-xs text-black">
+                        {Math.min(captured, medal.level)}/{medal.level}
+                      </Text>
 
                     </View>
                   </View>

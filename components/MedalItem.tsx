@@ -14,9 +14,9 @@ export function MedalItem({ title, description, captured, required, unlocked }: 
   const progress = Math.min(captured / required, 1);
 
   return (
-    <View className="mb-4 p-4 rounded-lg shadow-sm">
-      <Text className="text-base font-bold text-black">{title}</Text>
-      <Text className="text-sm text-zinc-600 mb-2">{description}</Text>
+    <View className="mb-4 p-1 items-start rounded-lg">
+      <Text className="text-base font-poppinssb text-black">{title}</Text>
+      <Text className="text-sm text-zinc-600 font-poppins mb-2">{description}</Text>
 
       <View className="flex-row items-center justify-between">
         {/* Barra de progresso feita com View */}
@@ -30,7 +30,7 @@ export function MedalItem({ title, description, captured, required, unlocked }: 
         {/* Ícone e contador */}
         <View className="ml-3 items-center">
           <Trophy size={20} color={unlocked ? '#facc15' : '#a1a1aa'} />
-          <Text className="text-xs text-black">
+          <Text className="text-xs font-poppins text-black">
             {captured}/{required}
           </Text>
         </View>

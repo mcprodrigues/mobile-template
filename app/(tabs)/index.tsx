@@ -64,93 +64,107 @@ export default function Index() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [identifiedAnimal, setIdentifiedAnimal] = useState('');
   const [confidence, setConfidence] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleToggleFacing = () => {
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'));
   };
 
-  const handleTakePicture = async () => {
-    try {
-      const photo = await cameraRef.current?.takePicture();
-      if (!photo?.uri) {
-        Alert.alert('Erro', 'Não foi possível tirar a foto.');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('file', {
-        uri: photo.uri,
-        name: 'captura.jpg',
-        type: 'image/jpeg',
-      } as any);
-
-      const response = await fetch('http://192.168.1.200:5000/prediction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        body: formData,
-      });
-
-      const result = await response.json();
-      console.log('🐾 Animal detectado:', result);
-
-      if (result.prediction === 'uncertain') {
-        setShowUncertainModal(true);
-      } else {
-        setIdentifiedAnimal(result.prediction);
-        setConfidence(result.confidence);
-        setShowConfirmModal(true);
-      }
-    } catch (err) {
-      console.error('Erro ao capturar/enviar imagem:', err);
-      Alert.alert('Erro', 'Falha ao processar a imagem.');
+const handleTakePicture = async () => {
+  try {
+    const photo = await cameraRef.current?.takePicture();
+    if (!photo?.uri) {
+      Alert.alert('Erro', 'Não foi possível tirar a foto.');
+      return;
     }
-  };
 
-  const handlePickFromGallery = async () => {
-    try {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
-        Alert.alert('Permissão negada', 'Você precisa permitir o acesso à galeria.');
-        return;
-      }
+    setIsLoading(true);
 
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        quality: 1,
-      });
+    const formData = new FormData();
+    formData.append('file', {
+      uri: photo.uri,
+      name: 'captura.jpg',
+      type: 'image/jpeg',
+    } as any);
 
-      if (result.canceled) return;
+    const response = await fetch('http://192.168.1.200:5000/prediction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      body: formData,
+    });
 
-      const asset = result.assets[0];
-      const formData = new FormData();
-      formData.append('file', {
-        uri: asset.uri,
-        name: 'galeria.jpg',
-        type: 'image/jpeg',
-      } as any);
+    const result = await response.json();
+    console.log('🐾 Animal detectado:', result);
 
-      const response = await fetch('http://192.168.1.200:5000/prediction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        body: formData,
-      });
+    setIsLoading(false);
 
-      const data = await response.json();
-      console.log('🐾 Animal da galeria:', data);
-
-      if (data.prediction === 'uncertain') {
-        setShowUncertainModal(true);
-      } else {
-        setIdentifiedAnimal(data.prediction);
-        setConfidence(data.confidence);
-        setShowConfirmModal(true);
-      }
-    } catch (error) {
-      console.error('Erro ao importar imagem da galeria:', error);
-      Alert.alert('Erro', 'Não foi possível processar a imagem da galeria.');
+    if (result.prediction === 'uncertain') {
+      setShowUncertainModal(true);
+    } else {
+      setIdentifiedAnimal(result.prediction);
+      setConfidence(result.confidence);
+      setShowConfirmModal(true);
     }
-  };
+  } catch (err) {
+    setIsLoading(false);
+    console.error('Erro ao capturar/enviar imagem:', err);
+    Alert.alert('Erro', 'Falha ao processar a imagem.');
+  }
+};
+
+
+const handlePickFromGallery = async () => {
+  try {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert('Permissão negada', 'Você precisa permitir o acesso à galeria.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (result.canceled) return;
+
+    setIsLoading(true);
+
+    const asset = result.assets[0];
+    const formData = new FormData();
+    formData.append('file', {
+      uri: asset.uri,
+      name: 'galeria.jpg',
+      type: 'image/jpeg',
+    } as any);
+
+    const response = await fetch('http://192.168.1.200:5000/prediction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log('🐾 Animal da galeria:', data);
+
+    setIsLoading(false);
+
+    if (data.prediction === 'uncertain') {
+      setShowUncertainModal(true);
+    } else {
+      setIdentifiedAnimal(data.prediction);
+      setConfidence(data.confidence);
+      setShowConfirmModal(true);
+    }
+  } catch (error) {
+    setIsLoading(false);
+    console.error('Erro ao importar imagem da galeria:', error);
+    Alert.alert('Erro', 'Não foi possível processar a imagem da galeria.');
+  }
+};
+
 
   return (
     <View className="flex-1 bg-rose-700 items-center justify-start pt-12 space-y-6">
@@ -324,6 +338,14 @@ export default function Index() {
           </View>
         </Pressable>
       </Modal>
+      <Modal visible={isLoading} transparent animationType="fade">
+  <View className="flex-1 bg-black/60 justify-center items-center">
+    <View className="bg-white p-6 rounded-xl">
+      <Text className="text-black font-poppins">Processando imagem...</Text>
+    </View>
+  </View>
+</Modal>
+
     </View>
   );
 }

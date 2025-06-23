@@ -28,24 +28,26 @@ export async function getMedalsDisplayData(): Promise<BadgeDisplay[]> {
   for (const h of history) {
     const apiName = h.animal.name;
     const internal = apiToInternalNameMap[apiName];
-    const displayName = internal.charAt(0).toUpperCase() + internal.slice(1); // Ex: 'pavao' -> 'Pavao'
+    const displayName = internal.charAt(0).toUpperCase() + internal.slice(1); 
     count[displayName] = (count[displayName] || 0) + 1;
   }
 
   const result: BadgeDisplay[] = [];
 
   for (const species of Object.keys(medalsJson)) {
-    const captured = count[species] || 0;
+    const capturedTotal = count[species] || 0;
     const badges = medalsJson[species];
 
     for (const badge of badges) {
+      const currentCaptured = Math.min(capturedTotal, badge.level);
+
       result.push({
         species,
         title: badge.title,
         description: badge.description,
         level: badge.level,
-        captured,
-        unlocked: captured >= badge.level,
+        captured: currentCaptured,
+        unlocked: capturedTotal >= badge.level,
       });
     }
   }
