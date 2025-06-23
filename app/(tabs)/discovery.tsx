@@ -2,9 +2,11 @@ import RevealAnimation from '@/components/RevealAnimation';
 import { pokemons } from '@/constants/pokemons';
 import { apiToInternalNameMap, getDisplayName } from '@/utils/getDisplayName';
 import { router, useLocalSearchParams } from 'expo-router';
+import { ArrowRight } from 'lucide-react-native';
 import React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
+
 
 const { width } = Dimensions.get('window');
 
@@ -88,18 +90,16 @@ export default function Discovery() {
             <View className="w-10 h-1 bg-gray-700 border-2 border-black" />
             <View className="w-10 h-1 bg-gray-700 border-2 border-black" />
           </View>
-          <View className="flex-row justify-end">
-            <View className="w-8 h-8 bg-yellow-400 border-2 border-black rounded-full items-center justify-center">
-              <View className="w-3 h-3 bg-yellow-200 rounded-full mb-3 mr-2" />
-            </View>
-          </View>
+
           <TouchableOpacity
-            onPress={() => router.push('/pokedex')}
-            className="mt-6"
+          
+            onPress={() => router.push('/Pokedex')}
+            className="mt-6 flex-row"
           >
-            <Text className="text-center text-blue-600 underline font-poppins">
+            <Text className="text-center text-white font-poppins">
               Prosseguir
             </Text>
+            <ArrowRight color='white'/>
           </TouchableOpacity>
 
         </View>

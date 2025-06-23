@@ -16,7 +16,7 @@ const TabIcon = ({ focused, label, iconActive: IconActive, iconInactive: IconIna
   const Icon = focused ? IconActive : IconInactive;
 
   return (
-    <View className="items-center justify-center min-w-[80px]">
+    <View className="items-center justify-center min-w-[80px] pb-8">
       <Icon width={24} height={24} style={{ marginBottom: 4 }} />
       <Text
         numberOfLines={1}
@@ -38,7 +38,7 @@ export default function _Layout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#ffffff',
-          height: 85,
+          height: 75,
           elevation: 0,
           shadowOpacity: 0,
           flexDirection: 'row',
@@ -46,6 +46,7 @@ export default function _Layout() {
           alignItems: 'center',
         },
         tabBarItemStyle: {
+          flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
           minWidth: 80,

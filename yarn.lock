@@ -1616,6 +1616,11 @@
   resolved "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.79.3.tgz"
   integrity sha512-T75NIQPRFCj6DFMxtcVMJTZR+3vHXaUMSd15t+CkJpc5LnyX91GVaPxpRSAdjFh7m3Yppl5MpdjV/fntImheYQ==
 
+"@react-native/normalize-colors@0.79.4":
+  version "0.79.4"
+  resolved "https://registry.yarnpkg.com/@react-native/normalize-colors/-/normalize-colors-0.79.4.tgz#97af253630af34be61d0b03225027b7400463c68"
+  integrity sha512-247/8pHghbYY2wKjJpUsY6ZNbWcdUa5j5517LZMn6pXrbSSgWuj3JA4OYibNnocCHBaVrt+3R8XC3VEJqLlHFg==
+
 "@react-native/normalize-colors@^0.74.1":
   version "0.74.89"
   resolved "https://registry.npmjs.org/@react-native/normalize-colors/-/normalize-colors-0.74.89.tgz"
@@ -3971,6 +3976,16 @@ expo-modules-core@2.4.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-navigation-bar@~4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/expo-navigation-bar/-/expo-navigation-bar-4.2.6.tgz#e4cb9cb866389ac542f7682ebc4c1df622e726fc"
+  integrity sha512-6phN9WXAAoEBWNhSLEnKuY+upQ9gV5CSCm8W66GOA47moglU5Ab3UDZ89hYZcfuIfsZR88/jx2KaF4VFCWGijg==
+  dependencies:
+    "@react-native/normalize-colors" "0.79.4"
+    debug "^4.3.2"
+    react-native-edge-to-edge "1.6.0"
+    react-native-is-edge-to-edge "^1.1.6"
+
 expo-router@~5.0.7:
   version "5.0.7"
   resolved "https://registry.npmjs.org/expo-router/-/expo-router-5.0.7.tgz"
@@ -4013,12 +4028,12 @@ expo-symbols@~0.4.5:
   dependencies:
     sf-symbols-typescript "^2.0.0"
 
-expo-system-ui@~5.0.8:
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/expo-system-ui/-/expo-system-ui-5.0.8.tgz"
-  integrity sha512-2sI7ALq3W8sKKa3FRW7PmuNznk+48cb1VzFy96vYZLZgTDZViz+fEJNdp1RHgLui/mAl3f8md1LneygSJvZ1EQ==
+expo-system-ui@~5.0.9:
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-5.0.9.tgz#38b5ef7e90d7d88123dec5b765c0992dbd7a192f"
+  integrity sha512-behQ4uP384++U9GjgXmyEno1Z8raN1/tZv7ZJhYkQkRj1g2xXvNltXN/PDRcOm/wCNqStVhDpYo2OOQm5E5/lQ==
   dependencies:
-    "@react-native/normalize-colors" "0.79.3"
+    "@react-native/normalize-colors" "0.79.4"
     debug "^4.3.2"
 
 expo-updates-interface@~1.1.0:
@@ -6424,6 +6439,11 @@ react-native-svg@15.11.2:
     css-select "^5.1.0"
     css-tree "^1.1.3"
     warn-once "0.1.1"
+
+react-native-toast-message@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.3.0.tgz#c25fb40d7af4388f6a798efbfca479d53916ed00"
+  integrity sha512-d7LldTK1ei1Bl7RFhoOYw8hVQ4oKPQHORYI//xR9Pyz3HxSlFlvQbueE5X3KLoemRRgBrOUg3zY6DxXnxrVLRg==
 
 react-native-web@~0.20.0:
   version "0.20.0"

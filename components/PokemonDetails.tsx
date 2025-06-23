@@ -87,7 +87,7 @@ export default function PokemonDetails({
         vaca: 'Vaca',
         gamba: 'Gamba',
         iguana: 'Iguana',
-        camaleao: 'Camaleão',
+        camaleao: 'Lagarto',
         lagarto: 'Lagarto',
         bode: 'Bode',
         cavalo: 'Cavalo',
