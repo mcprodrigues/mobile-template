@@ -7,7 +7,8 @@ import {
 import {
   forwardRef,
   useImperativeHandle,
-  useRef
+  useRef,
+  useState
 } from 'react';
 import {
   Image,
@@ -16,6 +17,17 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+
+import {
+  PinchGestureHandler,
+  PinchGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+import Animated, {
+  runOnJS,
+  useAnimatedGestureHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+
 
 type CameraProps = {
   facing: 'front' | 'back';
@@ -28,7 +40,22 @@ export type CameraHandler = {
 const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
-  const isFocused = useIsFocused(); 
+  const isFocused = useIsFocused();
+
+const [zoom, setZoom] = useState(0); 
+const zoomValue = useSharedValue(1); 
+
+
+const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
+  onActive: (event) => {
+    const newZoom = Math.min(Math.max((event.scale - 1) / 10 + zoom, 0), 1);
+    runOnJS(setZoom)(newZoom);
+  },
+  onEnd: () => {
+    zoomValue.value = 1;
+  },
+});
+
 
   useImperativeHandle(ref, () => ({
     takePicture: async () => {
@@ -47,10 +74,10 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   if (!permission.granted) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-                <Image
-                  source={require('@/assets/images/moema-1.png')}
-                  style={{ width: 200, height: 300 }}
-                />
+        <Image
+          source={require('@/assets/images/moema-1.png')}
+          style={{ width: 200, height: 300 }}
+        />
         <Text className="mb-2 text-center text-lg font-poppinssb">Permita o acesso à câmera</Text>
         <TouchableOpacity
           onPress={requestPermission}
@@ -64,13 +91,18 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
 
   return (
     <View style={styles.container}>
-      {/* Só renderiza a câmera se a tela estiver visível */}
       {isFocused && (
-        <CameraView
-          ref={cameraRef}
-          style={StyleSheet.absoluteFillObject}
-          facing={facing}
-        />
+<PinchGestureHandler onGestureEvent={pinchHandler}>
+  <Animated.View style={StyleSheet.absoluteFill}>
+    <CameraView
+      ref={cameraRef}
+      style={StyleSheet.absoluteFillObject}
+      facing={facing}
+      zoom={zoom}
+    />
+  </Animated.View>
+</PinchGestureHandler>
+
       )}
     </View>
   );

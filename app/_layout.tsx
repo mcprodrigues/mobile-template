@@ -6,8 +6,8 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
-
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -30,9 +30,11 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <Toast config={toastConfig} />
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}> 
+      <AuthProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+        <Toast config={toastConfig} />
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
