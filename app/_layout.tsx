@@ -1,10 +1,13 @@
 import '@/app/globals.css';
+import { toastConfig } from '@/components/toastConfig';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { useFonts } from 'expo-font';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -14,9 +17,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Oculta a barra de navegação inferior (Android)
     NavigationBar.setVisibilityAsync('hidden');
-    // Também pode mudar a cor da barra, se quiser
     NavigationBar.setBackgroundColorAsync('transparent');
   }, []);
 
@@ -31,6 +32,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <Stack screenOptions={{ headerShown: false }} />
+      <Toast config={toastConfig} />
     </AuthProvider>
   );
 }

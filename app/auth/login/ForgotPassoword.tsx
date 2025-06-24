@@ -19,6 +19,7 @@ import Header from '@/components/Header';
 import TokenConfirmationStep from '@/components/TokenConfirmationStep';
 import { changePasswordWithToken, requestToken } from '@/services/authService';
 import LottieView from 'lottie-react-native';
+import Toast from 'react-native-toast-message';
 
 export default function ForgotPassword() {
   const router = useRouter();
@@ -80,7 +81,11 @@ export default function ForgotPassword() {
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
-      alert('As senhas não coincidem.');
+      Toast.show({
+        type: 'error',
+        text2: 'As senhas não coincidem',
+        position: 'top',
+      });
       return;
     }
 
@@ -93,15 +98,38 @@ export default function ForgotPassword() {
         token: code.join(''),
       });
 
-      alert('Senha alterada com sucesso!');
+      Toast.show({
+        type: 'success',
+        text2: 'Senha alterada com sucesso!',
+        position: 'top',
+      });
+
       router.replace('/auth/login/LoginForm');
-    } catch (err) {
-      console.error(err);
-      alert('Erro ao alterar senha. Verifique o token ou tente novamente.');
+    } catch (error: any) {
+      const status = error?.response?.status;
+
+      if (status === 401) {
+        Toast.show({
+          type: 'error',
+          text2: 'Token inválido ou expirado',
+          position: 'top',
+        });
+
+        // Volta para a etapa do token
+        setStep(1);
+        setCode(['', '', '', '', '', '']);
+      } else {
+        Toast.show({
+          type: 'error',
+          text2: 'Erro ao alterar senha. Tente novamente.',
+          position: 'top',
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handleRequestToken = async () => {
     if (!isEmailValid) return;
@@ -111,7 +139,13 @@ export default function ForgotPassword() {
       setTimeout(() => setStep(1), 1000);
     } catch (error) {
       console.error('Erro ao enviar token:', error);
-      alert('Erro ao enviar token. Verifique o e-mail e tente novamente.');
+      // alert('Erro ao enviar token. Verifique o e-mail e tente novamente.');
+      Toast.show({
+        type: 'error',
+        text2: 'Erro ao alterar senha. Verifique o token ou tente novamente.',
+        position: 'top',
+        visibilityTime: 3000,
+      });
       setStep(0);
     }
   };
@@ -122,7 +156,13 @@ export default function ForgotPassword() {
       resetTimer();
     } catch (error) {
       console.error('Erro ao reenviar token:', error);
-      alert('Erro ao reenviar token. Tente novamente.');
+      // alert('Erro ao reenviar token. Tente novamente.');
+        Toast.show({
+        type: 'error',
+        text2: 'Erro ao reenviar token. Tente novamente.',
+        position: 'top',
+        visibilityTime: 3000,
+      });
     }
   };
 
@@ -175,16 +215,16 @@ export default function ForgotPassword() {
             timeLeft={timeLeft}
             setTimeLeft={setTimeLeft}
             onContinue={() => setStep(2)}
-            onResendToken={handleResendToken} 
+            onResendToken={handleResendToken}
           />
         )}
 
         {step === 2 && (
           <View className="flex-1 justify-between px-6 pb-8">
             <View>
-                    <MotiText className="text-center text-2xl text-zinc-800 font-poppins mt-10">
-        Tudo certo!
-      </MotiText>
+              <MotiText className="text-center text-2xl text-zinc-800 font-poppins mt-10">
+                Tudo certo!
+              </MotiText>
               <MotiText className="text-3xl text-center font-poppinssb mb-6">
                 Crie sua nova senha
               </MotiText>
@@ -213,7 +253,7 @@ export default function ForgotPassword() {
               </View>
 
               <FormInput
-                                className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
+                className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
 
                 placeholder="Confirmar nova senha"
                 secure

@@ -3,15 +3,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { Image as LucideImage, RotateCw, SwitchCamera } from 'lucide-react-native';
 import React, { useRef, useState } from 'react';
 import {
-  Alert,
   Dimensions,
   Modal,
   Pressable,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
+import Toast from 'react-native-toast-message';
+
 
 import { initialPokemons } from '@/constants/initialPokemons';
 import { useAuth } from '@/contexts/AuthContext';
@@ -75,7 +76,14 @@ const handleTakePicture = async () => {
   try {
     const photo = await cameraRef.current?.takePicture();
     if (!photo?.uri) {
-      Alert.alert('Erro', 'Não foi possível tirar a foto.');
+      // Alert.alert('Erro', 'Não foi possível tirar a foto.');
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: 'Não foi possível tirar a foto',
+        position: 'top',
+        visibilityTime: 3000,
+      });
       return;
     }
 
@@ -88,7 +96,7 @@ const handleTakePicture = async () => {
       type: 'image/jpeg',
     } as any);
 
-    const response = await fetch('http://192.168.1.200:5000/prediction', {
+    const response = await fetch('http://192.168.1.198:5000/prediction', {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data' },
       body: formData,
@@ -109,19 +117,39 @@ const handleTakePicture = async () => {
   } catch (err) {
     setIsLoading(false);
     console.error('Erro ao capturar/enviar imagem:', err);
-    Alert.alert('Erro', 'Falha ao processar a imagem.');
+    // Alert.alert('Erro', 'Falha ao processar a imagem.');
+          Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: 'Falha ao processar a imagem',
+        position: 'top',
+        visibilityTime: 3000,
+      });
   }
 };
 
 
 const handlePickFromGallery = async () => {
   try {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Alert.alert('Permissão negada', 'Você precisa permitir o acesso à galeria.');
-      return;
+    // Verifica o status atual da permissão
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+    if (status !== 'granted') {
+      const requestResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (requestResult.status !== 'granted') {
+        Toast.show({
+          type: 'error',
+          text1: 'Permissão negada',
+          text2: 'Você precisa permitir acesso à galeria',
+          position: 'top',
+          visibilityTime: 3000,
+        });
+        return;
+      }
     }
 
+    // A permissão foi concedida, continue com o processo
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -140,7 +168,7 @@ const handlePickFromGallery = async () => {
       type: 'image/jpeg',
     } as any);
 
-    const response = await fetch('http://192.168.1.200:5000/prediction', {
+    const response = await fetch('http://192.168.1.198:5000/prediction', {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data' },
       body: formData,
@@ -161,9 +189,17 @@ const handlePickFromGallery = async () => {
   } catch (error) {
     setIsLoading(false);
     console.error('Erro ao importar imagem da galeria:', error);
-    Alert.alert('Erro', 'Não foi possível processar a imagem da galeria.');
+
+    Toast.show({
+      type: 'error',
+      text1: 'Erro',
+      text2: 'Não foi possível processar a imagem da galeria.',
+      position: 'top',
+      visibilityTime: 3000,
+    });
   }
 };
+
 
 
   return (
@@ -289,7 +325,7 @@ const handlePickFromGallery = async () => {
     const userId = user?.id;
 
     try {
-      const response = await fetch('http://192.168.1.200:3000/image-processing/capture', {
+      const response = await fetch('http://192.168.1.198:3000/image-processing/capture', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -304,7 +340,7 @@ const handlePickFromGallery = async () => {
       await markPokemonAsFound(identifiedAnimal);
 
       // 🔁 NOVO: Buscar todas as capturas e atualizar localmente
-      const capturesResponse = await fetch(`http://192.168.1.200:3000/captures/user/${userId}`, {
+      const capturesResponse = await fetch(`http://192.168.1.198:3000/captures/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

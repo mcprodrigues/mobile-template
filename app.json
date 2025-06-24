@@ -8,7 +8,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Este app precisa acessar sua galeria para selecionar imagens.",
+        "NSCameraUsageDescription": "Este app precisa acessar sua câmera para capturar fotos."
+      }
     },
     "android": {
       "package": "com.mcprodrigues.pokedex",
@@ -16,7 +20,11 @@
         "foregroundImage": "./assets/images/splashscreen_logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
       "bundler": "metro",

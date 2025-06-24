@@ -32,7 +32,6 @@ interface PokemonDetailsProps {
 
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Camaleão',
   lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
@@ -87,7 +86,6 @@ export default function PokemonDetails({
         vaca: 'Vaca',
         gamba: 'Gamba',
         iguana: 'Iguana',
-        camaleao: 'Lagarto',
         lagarto: 'Lagarto',
         bode: 'Bode',
         cavalo: 'Cavalo',
@@ -95,7 +93,7 @@ export default function PokemonDetails({
         pombo: 'Pombo',
       };
 
-      const internalName = name; // ex: "pavao"
+      const internalName = name; 
       const badgeKey = internalToBadgeNameMap[internalName];
 
       if (!badgeKey) {

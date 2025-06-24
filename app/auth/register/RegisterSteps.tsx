@@ -18,6 +18,7 @@ import { Button } from '@/components/Button';
 import TokenConfirmationStep from '@/components/TokenConfirmationStep';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginUser, registerUser, requestToken } from '@/services/authService';
+import Toast from 'react-native-toast-message';
 
 export default function RegisterSteps() {
   const [step, setStep] = useState(0);
@@ -76,7 +77,13 @@ export default function RegisterSteps() {
         setTimeout(() => setStep(1), 800);
       } catch (error) {
         console.error('Erro ao enviar token:', error);
-        alert('Erro ao enviar token. Verifique o e-mail e tente novamente.');
+        // alert('Erro ao enviar token. Verifique o e-mail e tente novamente.');
+              Toast.show({
+                type: 'error',
+                text2: 'Erro ao enviar token. Verifique o e-mail e tente novamente.',
+                position: 'top',
+                visibilityTime: 3000,
+              });
         setStep(0);
       }
       return;
@@ -115,7 +122,12 @@ export default function RegisterSteps() {
         const accessToken = response.access_token;
 
         if (!formData.name || !formData.email || !userId) {
-          return alert('Erro ao salvar usuário: dados incompletos.');
+                Toast.show({
+                  type: 'error',
+                  text2: 'Credenciais inválidas',
+                  position: 'top',
+                  visibilityTime: 3000,
+                });
         }
 
         await login({
@@ -128,7 +140,13 @@ export default function RegisterSteps() {
 
         setTimeout(() => setStep(5), 1500);
       } catch (error: any) {
-        alert('Erro ao criar conta: ' + (error?.response?.data?.message || 'Tente novamente.'));
+        // alert('Erro ao criar conta: ' + (error?.response?.data?.message || 'Tente novamente.'));
+              Toast.show({
+                type: 'error',
+                text2: 'Erro ao criar conta, tente novamente',
+                position: 'top',
+                visibilityTime: 3000,
+              });
         setStep(3);
       }
     }
@@ -147,7 +165,13 @@ export default function RegisterSteps() {
       await requestToken({ email: formData.email });
       resetTimer();
     } catch (error) {
-      alert('Erro ao reenviar token. Tente novamente.');
+      // alert('Erro ao reenviar token. Tente novamente.');
+            Toast.show({
+              type: 'error',
+              text2: 'Erro ao reenviar token. Tente novamente.',
+              position: 'top',
+              visibilityTime: 3000,
+            });
     }
   };
 
@@ -327,7 +351,13 @@ export default function RegisterSteps() {
                 });
                 router.push('/(tabs)');
               } catch (error) {
-                alert('Erro ao continuar. Tente logar novamente.');
+                // alert('Erro ao continuar. Tente logar novamente.');
+                      Toast.show({
+                        type: 'error',
+                        text2: 'Erro ao continuar. Tente logar novamente.',
+                        position: 'top',
+                        visibilityTime: 3000,
+                      });
               }
             }}
           />

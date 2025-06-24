@@ -1,6 +1,6 @@
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { loginUser } from '@/services/authService';
 
 import { MotiText } from 'moti';
+import Toast from 'react-native-toast-message';
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -32,7 +33,7 @@ export default function LoginForm() {
       const response = await loginUser({ email: trimmedEmail, password: senha });
       console.log(response)
       const userData = {
-        id: response.user._id, 
+        id: response.user._id,
         name: response.user.name?.trim() || 'Usuário',
         email: response.user.email?.trim() || trimmedEmail,
         password: senha,
@@ -45,7 +46,14 @@ export default function LoginForm() {
       router.push('/auth/login/LoginSucess');
     } catch (error: any) {
       console.error('Erro ao logar:', error);
-      Alert.alert('Erro', 'Credenciais inválidas ou servidor indisponível');
+      // Alert.alert('Erro', ' ou servidor indisponível');
+      Toast.show({
+        type: 'error',
+        text2: 'Credenciais inválidas',
+        position: 'top',
+        visibilityTime: 3000,
+      });
+
     }
   };
 

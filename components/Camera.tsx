@@ -10,6 +10,7 @@ import {
   useRef
 } from 'react';
 import {
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -46,12 +47,16 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   if (!permission.granted) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <Text className="mb-4 text-center text-lg font-bold">Permita o acesso à câmera</Text>
+                <Image
+                  source={require('@/assets/images/moema-1.png')}
+                  style={{ width: 200, height: 300 }}
+                />
+        <Text className="mb-2 text-center text-lg font-poppinssb">Permita o acesso à câmera</Text>
         <TouchableOpacity
           onPress={requestPermission}
-          className="bg-blue-500 px-4 py-2 rounded"
+          className="bg-blue-900 px-4 py-2 w-52 rounded-full"
         >
-          <Text className="text-white font-bold">Permitir</Text>
+          <Text className="text-white  text-center font-poppinssb">Permitir</Text>
         </TouchableOpacity>
       </View>
     );

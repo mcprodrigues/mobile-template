@@ -1,10 +1,10 @@
 import ElementoCabra from '@/assets/pokemons/elemento_cabra.svg';
-import ElementoCamaleao from '@/assets/pokemons/elemento_camaleao.svg';
 import ElementoCavalo from '@/assets/pokemons/elemento_cavalo.svg';
 import ElementoEma from '@/assets/pokemons/elemento_ema.svg';
 import ElementoGamba from '@/assets/pokemons/elemento_gamba.svg';
 import ElementoGato from '@/assets/pokemons/elemento_gato.svg';
 import ElementoIguana from '@/assets/pokemons/elemento_iguana.svg';
+import ElementoLagarto from '@/assets/pokemons/elemento_lagarto.svg';
 import ElementoPavao from '@/assets/pokemons/elemento_pavao.svg';
 import ElementoPombo from '@/assets/pokemons/elemento_pombo.svg';
 import ElementoVaca from '@/assets/pokemons/elemento_vaca.svg';
@@ -12,8 +12,8 @@ import ElementoVaca from '@/assets/pokemons/elemento_vaca.svg';
 import Cabra from '@/assets/pokemons/cabra.png';
 import CabraHidden from '@/assets/pokemons/cabra_desconhecido.png';
 
-import Camaleao from '@/assets/pokemons/camaleao.png';
-import CamaleaoHidden from '@/assets/pokemons/camaleao_desconhecido.png';
+import Lagarto from '@/assets/pokemons/lagarto.png';
+import LagartoHidden from '@/assets/pokemons/lagarto_desconhecido.png';
 
 import Cavalo from '@/assets/pokemons/cavalo.png';
 import CavaloHidden from '@/assets/pokemons/cavalo_desconhecido.svg';
@@ -45,10 +45,10 @@ export const pokemons = {
     hidden: CabraHidden,
     element: ElementoCabra,
   },
-  camaleao: {
-    normal: Camaleao,
-    hidden: CamaleaoHidden,
-    element: ElementoCamaleao,
+  lagarto: {
+    normal: Lagarto,
+    hidden: LagartoHidden,
+    element: ElementoLagarto,
   },
   cavalo: {
     normal: Cavalo,

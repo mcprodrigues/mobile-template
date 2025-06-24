@@ -1,6 +1,5 @@
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Camaleão',
   lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
@@ -14,7 +13,6 @@ const nameMap: Record<string, string> = {
 
 export const apiToInternalNameMap: Record<string, string> = {
   possum: 'gamba',
-  chameleon: 'camaleao',
   lizard: 'lagarto',
   peacock: 'pavao',
   ostrich: 'ema',
@@ -28,7 +26,6 @@ export const apiToInternalNameMap: Record<string, string> = {
 
 export const internalToBadgeNameMap: Record<string, string> = {
   gamba: 'Gamba',
-  camaleao: 'Camaleão',
   lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',

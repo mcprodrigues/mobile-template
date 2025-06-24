@@ -1,6 +1,6 @@
 export const initialPokemons = [
   { name: 'cabra', isFound: false, bgCard: '#F7F5F1', bgRight: '#C5B78C' },
-  { name: 'camaleao', isFound: false, bgCard: '#EDF6EC', bgRight: '#188E3C' },
+  { name: 'lagarto', isFound: false, bgCard: '#EDF6EC', bgRight: '#188E3C' },
   { name: 'cavalo', isFound: false, bgCard: '#F9EFEA', bgRight: '#D97845' },
   { name: 'ema', isFound: false, bgCard: '#FBEFF3', bgRight: '#A6939F' },
   { name: 'gamba', isFound: false, bgCard: '#F8F1ED', bgRight: '#BFB4A9' },

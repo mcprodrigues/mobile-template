@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Mapeamento de nomes internos para os nomes usados no JSON de medalhas
 const internalToBadgeNameMap: Record<string, string> = {
   gamba: 'Gamba',
-  camaleao: 'Camaleão',
   lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',

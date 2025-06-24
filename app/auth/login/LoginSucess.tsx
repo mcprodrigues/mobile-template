@@ -16,7 +16,6 @@ const BADGES_KEY = 'userBadges';
 
 const internalToBadgeNameMap: Record<string, string> = {
   gamba: 'Gamba',
-  camaleao: 'Camaleão',
   lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
@@ -129,7 +128,7 @@ export default function LoginSuccess() {
         console.log('🔐 Iniciando requisição de capturas do usuário:', user?.id);
 
         const response = await fetch(
-          `http://192.168.1.200:3000/captures/user/${user?.id}`,
+          `http://192.168.1.198:3000/captures/user/${user?.id}`,
           {
             method: 'GET',
             headers: {

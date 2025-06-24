@@ -8,7 +8,7 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 
 const nameMap: Record<string, string> = {
   gamba: 'Gambá',
-  camaleao: 'Lagarto',
+  lagarto: 'Lagarto',
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
