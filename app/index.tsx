@@ -1,22 +1,30 @@
-import OnboardingItem from '@/components/onboarding/OnboardingItem';
-import Pagination from '@/components/onboarding/Pagination';
-import { onboardingData } from '@/data/onboardingData';
 import { router } from 'expo-router';
-
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, FlatList as RNFlatList } from 'react-native';
 
-export default function OnboardingScreen() {
+import OnboardingItem from '@/components/onboarding/OnboardingItem';
+import Pagination from '@/components/onboarding/Pagination';
+import { useAuth } from '@/contexts/AuthContext'; // importa o contexto de auth
+import { onboardingData } from '@/data/onboardingData';
+
+export default function Index() {
+  const { user } = useAuth(); // pega o usuário logado
+
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<RNFlatList>(null);
+
+  useEffect(() => {
+    if (user) {
+      router.replace('/(tabs)/page');
+    }
+  }, [user]);
 
   const handlePress = (index: number) => {
     if (index < onboardingData.length - 1) {
       flatListRef.current?.scrollToIndex({ index: index + 1 });
     } else {
-      router.push('/auth/splash/SplashScreen');  
-      
-  };
+      router.push('/auth/splash/SplashScreen');
+    }
   };
 
   return (

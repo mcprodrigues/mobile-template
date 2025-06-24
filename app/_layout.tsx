@@ -30,7 +30,7 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}> 
+  <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#fff' }}>
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }} />
         <Toast config={toastConfig} />

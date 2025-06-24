@@ -1,6 +1,7 @@
 import { initialPokemons } from '@/constants/initialPokemons';
 import medalsJson from '@/constants/medals.json';
 import { apiToInternalNameMap } from '@/utils/getDisplayName';
+import { showBadgeToast } from '@/utils/showBadgeToast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Mapeamento de nomes internos para os nomes usados no JSON de medalhas
@@ -10,7 +11,7 @@ const internalToBadgeNameMap: Record<string, string> = {
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
-  bode: 'Bode',
+  bode: 'Cabra',
   cavalo: 'Cavalo',
   gato: 'Gato',
   iguana: 'Iguana',
@@ -66,6 +67,11 @@ export async function updateCapturedPokemons(captures: any[]) {
     }, {});
     console.log('📊 Contagem de capturas por animal:', countMap);
 
+    const previousBadgesJson = await AsyncStorage.getItem(BADGES_KEY);
+    const previousBadges: Record<string, Badge[]> = previousBadgesJson
+      ? JSON.parse(previousBadgesJson)
+      : {};
+
     const userBadges: Record<string, Badge[]> = {};
 
     for (const [apiName, count] of Object.entries(countMap)) {
@@ -84,6 +90,21 @@ export async function updateCapturedPokemons(captures: any[]) {
       }
 
       const unlocked = availableBadges.filter((badge) => count >= badge.level);
+      const previouslyUnlocked = previousBadges[internal] || [];
+
+      const newBadges = unlocked.filter(
+        (badge) => !previouslyUnlocked.some((prev) => prev.level === badge.level)
+      );
+
+      if (newBadges.length > 0) {
+        newBadges.forEach((badge) => {
+          showBadgeToast(
+            'Nova conquista desbloqueada!',
+            badge.title,
+            badge.description
+          );
+        });
+      }
 
       if (unlocked.length > 0) {
         userBadges[internal] = unlocked;

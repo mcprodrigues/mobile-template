@@ -50,10 +50,22 @@ const login = async (data: User) => {
 };
 
 
-  const logout = async () => {
+const logout = async () => {
+  try {
+    await AsyncStorage.multiRemove([
+      'user',
+      'capturedPokemons',
+      'captureHistory',
+      'userBadges',
+    ]);
     setUser(null);
-    await AsyncStorage.removeItem('user');
-  };
+    console.log('🧹 Logout limpo: dados da conta anterior removidos.');
+  } catch (err) {
+    console.error('Erro ao fazer logout:', err);
+  }
+};
+
+
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

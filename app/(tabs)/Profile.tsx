@@ -24,11 +24,15 @@ export default function Profile() {
 
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  const handleLogout = async () => {
-    setShowLogoutConfirm(false);
-    await logout();
-    router.replace('/onboarding');
-  };
+const handleLogout = async () => {
+  setShowLogoutConfirm(false);
+  await logout();
+
+  setTimeout(() => {
+    router.replace('/');
+  }, 100);
+};
+
 
   return (
     <SafeAreaView className="flex-1 bg-white px-6 pt-10">

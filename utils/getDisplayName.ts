@@ -30,7 +30,7 @@ export const internalToBadgeNameMap: Record<string, string> = {
   pavao: 'Pavão',
   ema: 'Ema',
   pombo: 'Pombo',
-  bode: 'Bode',
+  bode: 'Cabra',
   cavalo: 'Cavalo',
   gato: 'Gato',
   iguana: 'Iguana',

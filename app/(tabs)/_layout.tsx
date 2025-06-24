@@ -54,7 +54,7 @@ export default function _Layout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="page"
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon

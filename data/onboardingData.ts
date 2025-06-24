@@ -18,7 +18,7 @@ export const onboardingData: OnboardingItemType[] = [
   },
   {
     id: '2',
-    image: require('@/assets/images/hilda.png'),
+    image: require('@/assets/images/moema.gif'),
     title: 'Mantenha sua Pokédex atualizada',
     subtitle: 'Cadastre-se e acesse sempre a lista dos animais do campus, com informações para você explorar a qualquer momento.',
     buttonTitle: 'Vamos começar!',

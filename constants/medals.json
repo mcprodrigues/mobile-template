@@ -188,33 +188,34 @@
     "description": "Você atingiu a paz de espírito dos répteis tropicais. (Capturou 100 iguanas)"
   }
 ],
-  "Cabra": [
-    {
-      "level": 1,
-      "title": "O Primeiro Berrante",
-      "description": "Bodes são mais malandros do que parecem. Primeiro pego! (Capturou 1 bode)"
-    },
-    {
-      "level": 10,
-      "title": "Escalador de Morros",
-      "description": "Você segue o cheiro forte e a coragem. (Capturou 10 bodes)"
-    },
-    {
-      "level": 25,
-      "title": "Mestre do Chifre",
-      "description": "Poucos capturam tantos sem levar chifrada. (Capturou 25 bodes)"
-    },
-    {
-      "level": 50,
-      "title": "Pastor Indomável",
-      "description": "Seus caminhos cruzam os deles. Sempre. (Capturou 50 bodes)"
-    },
-    {
-      "level": 100,
-      "title": "Sumo Bodeador",
-      "description": "Você agora comanda o rebanho dos rebeldes. (Capturou 100 bodes)"
-    }
-  ],
+"Cabra": [
+  {
+    "level": 1,
+    "title": "Primeira Cabritinha",
+    "description": "Ela pulou, berrou, mas você foi mais rápido. (Capturou 1 cabra)"
+  },
+  {
+    "level": 10,
+    "title": "Rainha dos Penhascos",
+    "description": "Dez cabras observadas no topo do mundo. (Capturou 10 cabras)"
+  },
+  {
+    "level": 25,
+    "title": "Cabreira Curiosa",
+    "description": "Você já sabe até o horário que elas cochilam. (Capturou 25 cabras)"
+  },
+  {
+    "level": 50,
+    "title": "Guardião do Rebanho",
+    "description": "As cabras nem correm mais de você — já te reconhecem. (Capturou 50 cabras)"
+  },
+  {
+    "level": 100,
+    "title": "Soberano das Cabras",
+    "description": "O pasto é seu, o rebanho é seu, o respeito é todo seu. (Capturou 100 cabras)"
+  }
+],
+
   "Cavalo": [
     {
       "level": 1,

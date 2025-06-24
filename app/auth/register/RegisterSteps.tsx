@@ -349,7 +349,7 @@ export default function RegisterSteps() {
                   password: formData.password,
                   accessToken,
                 });
-                router.push('/(tabs)');
+                router.push('/(tabs)/page');
               } catch (error) {
                 // alert('Erro ao continuar. Tente logar novamente.');
                       Toast.show({

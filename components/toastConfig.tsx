@@ -1,3 +1,4 @@
+import { Trophy } from 'lucide-react-native';
 import React from 'react';
 import { Text, View } from 'react-native';
 import type { ToastConfig, ToastConfigParams } from 'react-native-toast-message';
@@ -49,6 +50,43 @@ export const toastConfig: ToastConfig = {
       >
         {text2 || 'Ocorreu um erro'}
       </Text>
+    </View>
+  ),
+
+  // 👇 Novo tipo de toast personalizado para conquistas
+  customBadge: ({ props }: ToastConfigParams<any>) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        backgroundColor: '#fffbea',
+        padding: 16,
+        borderRadius: 10,
+        marginHorizontal: 16,
+        marginBottom: 32,
+        alignItems: 'center',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+      }}
+    >
+      <Trophy size={32} color="#facc15" style={{ marginRight: 12 }} />
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontWeight: '700', color: '#92400e', fontSize: 16 }}>
+          {props.title}
+        </Text>
+        <Text style={{ fontWeight: '600', color: '#78350f', fontSize: 14 }}>
+          {props.subtitle}
+        </Text>
+        <Text
+          numberOfLines={2}
+          ellipsizeMode="tail"
+          style={{ color: '#92400e', fontSize: 13, marginTop: 2 }}
+        >
+          {props.description}
+        </Text>
+      </View>
     </View>
   ),
 };
