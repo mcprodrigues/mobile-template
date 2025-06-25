@@ -16,6 +16,8 @@ export async function requestToken(data: { email: string }) {
 }
 
 
+
+
 export async function loginUser(data: {
   email: string;
   password: string;
@@ -38,6 +40,38 @@ export async function changePasswordWithToken(data: {
 }
 
 
+type SendPredictionParams = {
+  formData: FormData;
+  accessToken: string;
+};
+
+export async function sendPredictionRequest({
+  formData,
+  accessToken,
+}: SendPredictionParams): Promise<Response> {
+  try {
+    const response = await fetch(
+      'https://pokedex-back-end-production-9709.up.railway.app/image-processing/predict',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Erro na requisição: ${response.status}`);
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Erro ao enviar imagem para predição:', error);
+    throw error;
+  }
+}
 
 
 

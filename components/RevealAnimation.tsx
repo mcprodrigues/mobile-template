@@ -24,7 +24,7 @@ export default function RevealAnimation({
   }));
 
   useEffect(() => {
-    height.value = withTiming(120, { duration });
+    height.value = withTiming(200, { duration });
   }, []);
 
   return (

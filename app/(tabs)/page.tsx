@@ -8,14 +8,14 @@ import {
   Pressable,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 
-
 import { initialPokemons } from '@/constants/initialPokemons';
 import { useAuth } from '@/contexts/AuthContext';
+import { sendPredictionRequest } from '@/services/authService';
 import {
   apiToInternalNameMap,
   getDisplayName,
@@ -67,138 +67,147 @@ export default function Index() {
   const [confidence, setConfidence] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const handleToggleFacing = () => {
     setFacing((prev) => (prev === 'back' ? 'front' : 'back'));
   };
 
-const handleTakePicture = async () => {
-  try {
-    const photo = await cameraRef.current?.takePicture();
-    if (!photo?.uri) {
-      // Alert.alert('Erro', 'Não foi possível tirar a foto.');
-      Toast.show({
-        type: 'error',
-        text1: 'Erro',
-        text2: 'Não foi possível tirar a foto',
-        position: 'top',
-        visibilityTime: 3000,
+  const handleTakePicture = async () => {
+    try {
+      if (!user) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro de autenticação',
+          text2: 'Usuário não logado.',
+          position: 'top',
+        });
+        return;
+      }
+
+      const photo = await cameraRef.current?.takePicture();
+      if (!photo?.uri) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Não foi possível tirar a foto',
+          position: 'top',
+        });
+        return;
+      }
+
+      setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: photo.uri,
+        name: 'captura.jpg',
+        type: 'image/jpeg',
+      } as any);
+
+      const response = await sendPredictionRequest({
+        formData,
+        accessToken: user.accessToken,
       });
-      return;
-    }
 
-    setIsLoading(true);
+      const result = await response.json();
+      console.log('🐾 Animal detectado:', result);
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: photo.uri,
-      name: 'captura.jpg',
-      type: 'image/jpeg',
-    } as any);
+      setIsLoading(false);
 
-    const response = await fetch('http://192.168.1.198:5000/prediction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
-      body: formData,
-    });
-
-    const result = await response.json();
-    console.log('🐾 Animal detectado:', result);
-
-    setIsLoading(false);
-
-    if (result.prediction === 'uncertain') {
-      setShowUncertainModal(true);
-    } else {
-      setIdentifiedAnimal(result.prediction);
-      setConfidence(result.confidence);
-      setShowConfirmModal(true);
-    }
-  } catch (err) {
-    setIsLoading(false);
-    console.error('Erro ao capturar/enviar imagem:', err);
-    // Alert.alert('Erro', 'Falha ao processar a imagem.');
-          Toast.show({
+      if (result.prediction === 'uncertain') {
+        setShowUncertainModal(true);
+      } else {
+        setIdentifiedAnimal(result.prediction);
+        setConfidence(result.confidence);
+        setShowConfirmModal(true);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      console.error('Erro ao capturar/enviar imagem:', err);
+      Toast.show({
         type: 'error',
         text1: 'Erro',
         text2: 'Falha ao processar a imagem',
         position: 'top',
-        visibilityTime: 3000,
       });
-  }
-};
+    }
+  };
 
-
-const handlePickFromGallery = async () => {
-  try {
-    // Verifica o status atual da permissão
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
-
-    if (status !== 'granted') {
-      const requestResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (requestResult.status !== 'granted') {
+  const handlePickFromGallery = async () => {
+    try {
+      if (!user) {
         Toast.show({
           type: 'error',
-          text1: 'Permissão negada',
-          text2: 'Você precisa permitir acesso à galeria',
+          text1: 'Erro de autenticação',
+          text2: 'Usuário não logado.',
           position: 'top',
-          visibilityTime: 3000,
         });
         return;
       }
+
+      const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        const requestResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (requestResult.status !== 'granted') {
+          Toast.show({
+            type: 'error',
+            text1: 'Permissão negada',
+            text2: 'Você precisa permitir acesso à galeria',
+            position: 'top',
+          });
+          return;
+        }
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 1,
+      });
+
+      if (result.canceled) return;
+
+      setIsLoading(true);
+
+      const asset = result.assets[0];
+      const formData = new FormData();
+      formData.append('file', {
+        uri: asset.uri,
+        name: 'galeria.jpg',
+        type: 'image/jpeg',
+      } as any);
+
+      const response = await sendPredictionRequest({
+        formData,
+        accessToken: user.accessToken,
+      });
+
+      const data = await response.json();
+      console.log('🐾 Animal da galeria:', data);
+
+      setIsLoading(false);
+
+if (
+  !data.prediction ||
+  data.prediction.trim().toLowerCase() === 'uncertain'
+) {
+  setShowUncertainModal(true);
+} else {
+  setIdentifiedAnimal(data.prediction);
+  setConfidence(data.confidence);
+  setShowConfirmModal(true);
+}
+
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Erro ao importar imagem da galeria:', error);
+      // Toast.show({
+      //   type: 'error',
+      //   text1: 'Erro',
+      //   text2: 'Não foi possível processar a imagem da galeria.',
+      //   position: 'top',
+      // });
     }
-
-    // A permissão foi concedida, continue com o processo
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      quality: 1,
-    });
-
-    if (result.canceled) return;
-
-    setIsLoading(true);
-
-    const asset = result.assets[0];
-    const formData = new FormData();
-    formData.append('file', {
-      uri: asset.uri,
-      name: 'galeria.jpg',
-      type: 'image/jpeg',
-    } as any);
-
-    const response = await fetch('http://192.168.1.198:5000/prediction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
-      body: formData,
-    });
-
-    const data = await response.json();
-    console.log('🐾 Animal da galeria:', data);
-
-    setIsLoading(false);
-
-    if (data.prediction === 'uncertain') {
-      setShowUncertainModal(true);
-    } else {
-      setIdentifiedAnimal(data.prediction);
-      setConfidence(data.confidence);
-      setShowConfirmModal(true);
-    }
-  } catch (error) {
-    setIsLoading(false);
-    console.error('Erro ao importar imagem da galeria:', error);
-
-    Toast.show({
-      type: 'error',
-      text1: 'Erro',
-      text2: 'Não foi possível processar a imagem da galeria.',
-      position: 'top',
-      visibilityTime: 3000,
-    });
-  }
-};
+  };
 
 
 
@@ -325,7 +334,7 @@ const handlePickFromGallery = async () => {
     const userId = user?.id;
 
     try {
-      const response = await fetch('http://192.168.1.198:3000/image-processing/capture', {
+      const response = await fetch('https://pokedex-back-end-production-9709.up.railway.app/image-processing/capture', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -340,7 +349,7 @@ const handlePickFromGallery = async () => {
       await markPokemonAsFound(identifiedAnimal);
 
       // 🔁 NOVO: Buscar todas as capturas e atualizar localmente
-      const capturesResponse = await fetch(`http://192.168.1.198:3000/captures/user/${userId}`, {
+      const capturesResponse = await fetch(`https://pokedex-back-end-production-9709.up.railway.app/captures/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
