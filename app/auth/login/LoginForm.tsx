@@ -87,6 +87,8 @@ export default function LoginForm() {
             <FormInput
               label="E-mail"
               placeholder="Digite seu e-mail"
+                              placeholderTextColor="#999"
+
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
@@ -94,6 +96,8 @@ export default function LoginForm() {
             <FormInput
               label="Senha"
               placeholder="Digite sua senha"
+                              placeholderTextColor="#999"
+
               value={senha}
               onChangeText={setSenha}
               secure

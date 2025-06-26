@@ -73,12 +73,12 @@ const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>(
 
   if (!permission.granted) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center">
         <Image
           source={require('@/assets/images/moema-1.png')}
           style={{ width: 200, height: 300 }}
         />
-        <Text className="mb-2 text-center text-lg font-poppinssb">Permita o acesso à câmera</Text>
+        <Text className="mb-2 text-center text-black text-lg font-poppinssb">Permita o acesso à câmera</Text>
         <TouchableOpacity
           onPress={requestPermission}
           className="bg-blue-900 px-4 py-2 w-52 rounded-full"

@@ -181,12 +181,14 @@ export default function ForgotPassword() {
               <MotiText className="text-center text-2xl text-zinc-800 font-poppins pt-10">
                 Vamos recuperar!
               </MotiText>
-              <MotiText className="text-3xl text-center font-poppinssb mt-2 mb-6">
+              <MotiText className="text-3xl text-center text-black font-poppinssb mt-2 mb-6">
                 Qual é o seu e-mail?
               </MotiText>
 
               <FormInput
                 placeholder="E-mail"
+                placeholderTextColor="#999"
+
                 keyboardType="email-address"
                 value={email}
                 onChangeText={setEmail}
@@ -225,7 +227,7 @@ export default function ForgotPassword() {
               <MotiText className="text-center text-2xl text-zinc-800 font-poppins mt-10">
                 Tudo certo!
               </MotiText>
-              <MotiText className="text-3xl text-center font-poppinssb mb-6">
+              <MotiText className="text-3xl text-center text-black font-poppinssb mb-6">
                 Crie sua nova senha
               </MotiText>
 
@@ -233,6 +235,7 @@ export default function ForgotPassword() {
                 <TextInput
                   className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
                   placeholder="Nova senha"
+                  placeholderTextColor="#999"
                   secureTextEntry={!showPassword}
                   value={newPassword}
                   onChangeText={setNewPassword}
@@ -256,6 +259,7 @@ export default function ForgotPassword() {
                 className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
 
                 placeholder="Confirmar nova senha"
+                placeholderTextColor="#999"
                 secure
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}

@@ -3,6 +3,7 @@
     "name": "Pokédex Unifor",
     "slug": "Pokedex_Unifor",
     "version": "1.0.2",
+    "icon": "./assets/images/logo.png", 
     "orientation": "portrait",
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",

@@ -1,3 +1,4 @@
+// ... (importações mantidas iguais)
 import { Feather } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -23,8 +24,6 @@ import Toast from 'react-native-toast-message';
 export default function RegisterSteps() {
   const [step, setStep] = useState(0);
   const { login } = useAuth();
-  const [userId, setUserId] = useState('');
-  const [accessToken, setAccessToken] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
@@ -57,7 +56,7 @@ export default function RegisterSteps() {
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && formData.email.trim().length <= 40;
   const isTokenValid = code.every((d) => d !== '');
-  const isSenhaValid = formData.password.trim().length >= 6 && formData.password.trim().length <= 8;
+const isSenhaValid = formData.password.trim().length >= 8;
   const isNomeValid = formData.name.trim().length >= 3 && formData.name.trim().length <= 30;
 
   const canProceed = () => {
@@ -77,13 +76,12 @@ export default function RegisterSteps() {
         setTimeout(() => setStep(1), 800);
       } catch (error) {
         console.error('Erro ao enviar token:', error);
-        // alert('Erro ao enviar token. Verifique o e-mail e tente novamente.');
-              Toast.show({
-                type: 'error',
-                text2: 'Erro ao enviar token. Verifique o e-mail e tente novamente.',
-                position: 'top',
-                visibilityTime: 3000,
-              });
+        Toast.show({
+          type: 'error',
+          text2: 'Erro ao enviar token. Verifique o e-mail e tente novamente.',
+          position: 'top',
+          visibilityTime: 3000,
+        });
         setStep(0);
       }
       return;
@@ -117,19 +115,19 @@ export default function RegisterSteps() {
       };
 
       try {
-        const response = await registerUser(payload);
-        const userId = response._id || response.user?._id;
-        const accessToken = response.access_token;
+        // Registrar usuário
+        await registerUser(payload);
 
-        if (!formData.name || !formData.email || !userId) {
-                Toast.show({
-                  type: 'error',
-                  text2: 'Credenciais inválidas',
-                  position: 'top',
-                  visibilityTime: 3000,
-                });
-        }
+        // Fazer login para obter o token
+        const loginResponse = await loginUser({
+          email: formData.email.trim(),
+          password: formData.password,
+        });
 
+        const userId = loginResponse.user._id;
+        const accessToken = loginResponse.access_token;
+
+        // Login no contexto
         await login({
           id: userId,
           name: formData.name,
@@ -140,13 +138,13 @@ export default function RegisterSteps() {
 
         setTimeout(() => setStep(5), 1500);
       } catch (error: any) {
-        // alert('Erro ao criar conta: ' + (error?.response?.data?.message || 'Tente novamente.'));
-              Toast.show({
-                type: 'error',
-                text2: 'Erro ao criar conta, tente novamente',
-                position: 'top',
-                visibilityTime: 3000,
-              });
+        console.error('Erro ao registrar ou logar:', error);
+        Toast.show({
+          type: 'error',
+          text2: 'Erro ao criar conta, tente novamente',
+          position: 'top',
+          visibilityTime: 3000,
+        });
         setStep(3);
       }
     }
@@ -165,13 +163,12 @@ export default function RegisterSteps() {
       await requestToken({ email: formData.email });
       resetTimer();
     } catch (error) {
-      // alert('Erro ao reenviar token. Tente novamente.');
-            Toast.show({
-              type: 'error',
-              text2: 'Erro ao reenviar token. Tente novamente.',
-              position: 'top',
-              visibilityTime: 3000,
-            });
+      Toast.show({
+        type: 'error',
+        text2: 'Erro ao reenviar token. Tente novamente.',
+        position: 'top',
+        visibilityTime: 3000,
+      });
     }
   };
 
@@ -184,6 +181,8 @@ export default function RegisterSteps() {
         <TextInput
           className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'}`}
           placeholder="E-mail"
+                          placeholderTextColor="#999"
+
           value={formData.email}
           onChangeText={(text) => setFormData((prev) => ({ ...prev, email: text }))}
           keyboardType="email-address"
@@ -217,10 +216,12 @@ export default function RegisterSteps() {
           <TextInput
             className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
             placeholder="Senha"
+                            placeholderTextColor="#999"
+
             value={formData.password}
             onChangeText={(text) => setFormData((prev) => ({ ...prev, password: text }))}
             secureTextEntry={!showPassword}
-            maxLength={8}
+            maxLength={18}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
@@ -232,7 +233,7 @@ export default function RegisterSteps() {
           </Pressable>
         </View>
       ),
-      helper: 'Sua senha deve ter entre 6 e 8 caracteres.',
+      helper: 'Sua senha deve ter no mínimo 8 caracteres.',
     },
     {
       key: 'nome',
@@ -242,6 +243,8 @@ export default function RegisterSteps() {
         <TextInput
           className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'}`}
           placeholder="Nome de usuário"
+                          placeholderTextColor="#999"
+
           value={formData.name}
           onChangeText={(text) => setFormData((prev) => ({ ...prev, name: text }))}
           maxLength={30}
@@ -273,8 +276,7 @@ export default function RegisterSteps() {
         {step < 4 && (
           <>
             {step === 1 ? (
-                <View className="flex-1 justify-between items-center w-full">
-
+              <View className="flex-1 justify-between items-center w-full">
                 {steps[1].render()}
               </View>
             ) : (
@@ -296,7 +298,7 @@ export default function RegisterSteps() {
                   )}
                 </View>
 
-                <View className=" w-full items-center mb-16">
+                <View className="w-full items-center mb-16">
                   <Button
                     variant={canProceed() ? 'primary' : 'disabled'}
                     title={step < 3 ? 'Continuar' : 'Criar conta'}
@@ -336,30 +338,7 @@ export default function RegisterSteps() {
           <Button
             title="Acessar"
             variant="primary"
-            onPress={async () => {
-              try {
-                const response = await loginUser({
-                  email: formData.email.trim(),
-                  password: formData.password,
-                });
-                await login({
-                  id: userId,
-                  name: formData.name,
-                  email: formData.email,
-                  password: formData.password,
-                  accessToken,
-                });
-                router.push('/(tabs)/page');
-              } catch (error) {
-                // alert('Erro ao continuar. Tente logar novamente.');
-                      Toast.show({
-                        type: 'error',
-                        text2: 'Erro ao continuar. Tente logar novamente.',
-                        position: 'top',
-                        visibilityTime: 3000,
-                      });
-              }
-            }}
+            onPress={() => router.push('/(tabs)/page')}
           />
         </View>
       )}

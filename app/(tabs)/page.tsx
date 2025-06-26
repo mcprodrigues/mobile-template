@@ -200,12 +200,12 @@ if (
     } catch (error) {
       setIsLoading(false);
       console.error('Erro ao importar imagem da galeria:', error);
-      // Toast.show({
-      //   type: 'error',
-      //   text1: 'Erro',
-      //   text2: 'Não foi possível processar a imagem da galeria.',
-      //   position: 'top',
-      // });
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: 'Não foi possível processar a imagem da galeria.',
+        position: 'top', 
+      });
     }
   };
 

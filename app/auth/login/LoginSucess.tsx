@@ -52,16 +52,25 @@ async function updateCapturedPokemons(captures: any[]) {
       isFound: internalNames.includes(p.name),
     }));
 
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(pokemons));
-    console.log('✅ Pokémons atualizados e salvos:', pokemons);
+    try {
+      const pokemonsStr = JSON.stringify(pokemons);
+      await AsyncStorage.setItem(STORAGE_KEY, pokemonsStr);
+      console.log('✅ Pokémons atualizados e salvos:', pokemons);
+    } catch (e) {
+      console.error('❌ Erro ao salvar pokémons:', e);
+    }
 
     const formattedHistory = captures.map((c) => ({
       animal: { name: c.animal.name },
       date: c.capturedAt,
     }));
 
-    await AsyncStorage.setItem(CAPTURES_HISTORY_KEY, JSON.stringify(formattedHistory));
-    console.log('📘 Histórico de capturas salvo:', formattedHistory);
+    try {
+      await AsyncStorage.setItem(CAPTURES_HISTORY_KEY, JSON.stringify(formattedHistory));
+      console.log('📘 Histórico de capturas salvo:', formattedHistory);
+    } catch (e) {
+      console.error('❌ Erro ao salvar histórico de capturas:', e);
+    }
 
     const countMap = captures.reduce((acc: Record<string, number>, curr: any) => {
       const name = curr.animal.name;
@@ -100,8 +109,12 @@ async function updateCapturedPokemons(captures: any[]) {
       }
     }
 
-    await AsyncStorage.setItem(BADGES_KEY, JSON.stringify(userBadges));
-    console.log('🎯 Medalhas salvas no AsyncStorage:', userBadges);
+    try {
+      await AsyncStorage.setItem(BADGES_KEY, JSON.stringify(userBadges));
+      console.log('🎯 Medalhas salvas no AsyncStorage:', userBadges);
+    } catch (e) {
+      console.error('❌ Erro ao salvar medalhas:', e);
+    }
 
     console.log('🏆 Medalhas totais do usuário:');
     Object.entries(userBadges).forEach(([internalName, medals]) => {
@@ -113,7 +126,7 @@ async function updateCapturedPokemons(captures: any[]) {
     });
 
   } catch (err) {
-    console.error('❌ Erro ao atualizar pokémons, histórico ou medalhas:', err);
+    console.error('❌ Erro geral ao processar capturas:', err);
   }
 }
 
@@ -124,15 +137,21 @@ export default function LoginSuccess() {
 
   useEffect(() => {
     const fetchCaptured = async () => {
+      if (!user?.id || !user?.accessToken) {
+        console.warn('⚠️ Usuário não definido ou sem token. Abortando...');
+        setIsLoading(false);
+        return;
+      }
+
       try {
         console.log('🔐 Iniciando requisição de capturas do usuário:', user?.id);
 
         const response = await fetch(
-          `http://192.168.1.198:3000/captures/user/${user?.id}`,
+          `https://pokedex-back-end-production-9709.up.railway.app/captures/user/${user.id}`,
           {
             method: 'GET',
             headers: {
-              Authorization: `Bearer ${user?.accessToken}`,
+              Authorization: `Bearer ${user.accessToken}`,
               'Content-Type': 'application/json',
             },
           }
@@ -150,8 +169,13 @@ export default function LoginSuccess() {
 
         await updateCapturedPokemons(data);
 
-        const stored = await AsyncStorage.getItem(STORAGE_KEY);
-        console.log('💾 Pokémons no AsyncStorage:', stored);
+        try {
+          const stored = await AsyncStorage.getItem(STORAGE_KEY);
+          console.log('💾 Pokémons no AsyncStorage:', stored);
+        } catch (e) {
+          console.error('❌ Erro ao ler STORAGE_KEY:', e);
+        }
+
       } catch (err) {
         console.error('❌ Erro ao buscar capturas do usuário:', err);
       } finally {
@@ -179,10 +203,10 @@ export default function LoginSuccess() {
 
   return (
     <View className="flex-1 p-28 justify-end items-center gap-4 bg-white">
-          <Image
-            source={require('@/assets/images/moema.gif')}
-            style={{ width: 200, height: 300 }}
-          />
+      <Image
+        source={require('@/assets/images/moema.gif')}
+        style={{ width: 200, height: 300 }}
+      />
       <Text className="w-80 text-3xl font-poppinssb text-center text-black">
         Bem-vindo de volta, Treinador!
       </Text>
