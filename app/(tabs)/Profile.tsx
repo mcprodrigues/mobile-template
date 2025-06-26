@@ -1,6 +1,6 @@
 import { images } from '@/constants/images';
 import { useRouter } from 'expo-router';
-import { LogOut, MoreVertical, Trash } from 'lucide-react-native';
+import { ChevronRight, LogOut, MoreVertical, Trash } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
   Image,
@@ -56,19 +56,26 @@ export default function Profile() {
 
         <Text className="font-poppinssb text-black text-base mb-3">Informações da conta</Text>
 
-        <TouchableOpacity className="flex-col py-3">
+        <TouchableOpacity className="justify-between flex-row py-3" onPress={() => router.push('/edit/Name')}> 
+          <View className='flex-col'>
           <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
           <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
+          </View>
+          <ChevronRight color='black' size={20}/>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex-col py-3">
+        <TouchableOpacity className="justify-between flex-row py-3">
+          <View className='flex-col'>
           <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
           <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
+          </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex-col py-3">
+        <TouchableOpacity className="justify-between flex-row py-3">
+          <View className='flex-col'>
           <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
           <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
+          </View>
         </TouchableOpacity>
 
         <Text className="font-poppinssb text-black text-base mt-10 mb-3">Outros</Text>
@@ -169,7 +176,7 @@ export default function Profile() {
               Tem certeza que deseja deletar sua conta?
             </Text>
             <Text className="text-center text-zinc-600 font-poppins mb-6">
-              Essa é uma ação <Text style={{ fontStyle: 'italic' }}>irreversível</Text>!
+              Essa é uma ação irreversível
             </Text>
 
             <TouchableOpacity
