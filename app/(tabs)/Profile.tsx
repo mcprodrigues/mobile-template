@@ -1,8 +1,9 @@
 import { images } from '@/constants/images';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { ChevronRight, LogOut, MoreVertical, Trash } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   Modal,
   Pressable,
@@ -17,8 +18,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+const { user, refreshUser, isUserLoading, logout } = useAuth();
   const router = useRouter();
+
+  const title = user?.title || 'Treinador';
+  const level = user?.level ?? 1;
+  const totalPoints = user?.totalPoints ?? 0;
+
+  const requiredPointsForNextLevel = (level + 1) * 300;
+
+const xpProgress = (totalPoints / requiredPointsForNextLevel) * 100;
+
 
   const name = user?.name || 'Nome não disponível';
   const email = user?.email || 'Email não disponível';
@@ -27,6 +37,37 @@ export default function Profile() {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+const [isLoading, setIsLoading] = useState(true);
+
+
+useFocusEffect(
+  React.useCallback(() => {
+    let isActive = true;
+
+    const fetchUser = async () => {
+      setIsLoading(true);
+      await refreshUser();
+      if (isActive) {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+
+    return () => {
+      isActive = false;
+    };
+  }, [])
+);
+
+if (isUserLoading || !user) {
+  return (
+    <View className="flex-1 justify-center items-center bg-white">
+      <ActivityIndicator size="large" color="#1E3A8A" /> 
+    </View>
+  );
+}
+
 
   const handleLogout = async () => {
     setShowLogoutConfirm(false);
@@ -38,43 +79,57 @@ export default function Profile() {
 
   return (
     <SafeAreaView className="flex-1 bg-white px-6 pt-10">
+      <View className='flex items-end'>
+        <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
+          <MoreVertical size={24} color="#4B5563" />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView>
-        {/* Header */}
-        <View className="flex-row items-end justify-between mt-4 mb-8">
+        <View className="flex-row items-center justify-center mt-4 mb-8">
           <View className="flex-row items-center">
             <Image
               source={images.Icon}
-              style={{ width: 42, height: 42 }}
-              resizeMode="contain"
+              style={{ width: 80, height: 80, borderRadius: 9999 }}
+              resizeMode="cover"
             />
-            <Text className="font-poppinssb text-zinc-800 text-xl ml-3">{name}</Text>
+            <View className="ml-4 flex-1">
+              <View className="flex-row items-center justify-between">
+                <Text className="font-poppinssb text-zinc-800 text-xl">{name}</Text>
+                <View className="bg-blue-900 rounded-md px-2 py-1">
+                  <Text className="text-xs font-poppinssb text-white">Nível {level}</Text>
+                </View>
+              </View>
+              <Text className="font-poppins text-zinc-500 text-sm mb-1">{title}</Text>
+              <View className="h-2 w-full bg-zinc-200 rounded-full">
+                <View className="h-full bg-blue-900 rounded-full" style={{ width: `${xpProgress}%` }} />
+              </View>
+              <Text className="text-xs text-zinc-500 mt-1">{totalPoints}/{requiredPointsForNextLevel} XP</Text>
+            </View>
           </View>
-          <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
-            <MoreVertical size={24} color="#4B5563" />
-          </TouchableOpacity>
         </View>
 
         <Text className="font-poppinssb text-black text-base mb-3">Informações da conta</Text>
 
-        <TouchableOpacity className="justify-between flex-row py-3" onPress={() => router.push('/edit/Name')}> 
+        <TouchableOpacity className="justify-between flex-row py-3" onPress={() => router.push('/edit/Name')}>
           <View className='flex-col'>
-          <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
+            <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
           </View>
-          <ChevronRight color='black' size={20}/>
+          <ChevronRight color='black' size={20} />
         </TouchableOpacity>
 
         <TouchableOpacity className="justify-between flex-row py-3">
           <View className='flex-col'>
-          <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
+            <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity className="justify-between flex-row py-3">
           <View className='flex-col'>
-          <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
+            <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
           </View>
         </TouchableOpacity>
 
@@ -89,7 +144,7 @@ export default function Profile() {
         </TouchableOpacity>
 
         <Text className="text-zinc-500 font-poppins text-sm mt-2">
-          Você entrou como {name}.
+          Você entrou como {name}
         </Text>
       </ScrollView>
 

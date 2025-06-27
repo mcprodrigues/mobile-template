@@ -63,40 +63,41 @@ export default function ChangeNameScreen() {
   };
 
   return (
-    <KeyboardAwareScrollView
-      enableOnAndroid
-      extraHeight={200}
-      keyboardOpeningTime={0}
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: 'space-between',
-        paddingHorizontal: 24,
-        paddingBottom: 30,
-      }}
-      className="bg-white pt-14"
-    >
-      <View>
-        <Header title="Trocar nome" router={router} />
+    <View className="flex-1 bg-white">
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        extraHeight={200}
+        keyboardOpeningTime={0}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'space-between',
+          paddingHorizontal: 24,
+          paddingBottom: 30,
+        }}
+        className="pt-14"
+      >
+        <View>
+          <Header title="Trocar nome" router={router} />
+          <View className="pt-8">
+            <FormInput
+              placeholder="Digite seu novo nome"
+              value={name}
+              onChangeText={setName}
+              placeholderTextColor="#999"
+            />
+          </View>
+        </View>
 
-        <View className="pt-8">
-          <FormInput
-            placeholder="Digite seu novo nome"
-            value={name}
-            onChangeText={setName}
-            placeholderTextColor="#999"
+        <View>
+          <Button
+            title="Atualizar"
+            onPress={handleChangeName}
+            loading={loading}
+            variant={loading ? 'disabled' : 'primary'}
           />
         </View>
-      </View>
-
-      <View>
-        <Button
-          title="Atualizar"
-          onPress={handleChangeName}
-          loading={loading}
-          variant={loading ? 'disabled' : 'primary'}
-        />
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

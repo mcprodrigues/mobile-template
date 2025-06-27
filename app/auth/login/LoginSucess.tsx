@@ -41,9 +41,7 @@ async function updateCapturedPokemons(captures: any[]) {
 
     const internalNames = [
       ...new Set(
-        captures
-          .map((c) => apiToInternalNameMap[c.animal.name])
-          .filter(Boolean)
+        captures.map((c) => apiToInternalNameMap[c.animal.name]).filter(Boolean)
       ),
     ];
 
@@ -52,31 +50,23 @@ async function updateCapturedPokemons(captures: any[]) {
       isFound: internalNames.includes(p.name),
     }));
 
-    try {
-      const pokemonsStr = JSON.stringify(pokemons);
-      await AsyncStorage.setItem(STORAGE_KEY, pokemonsStr);
-      console.log('✅ Pokémons atualizados e salvos:', pokemons);
-    } catch (e) {
-      console.error('❌ Erro ao salvar pokémons:', e);
-    }
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(pokemons));
+    console.log('✅ Pokémons atualizados e salvos:', pokemons);
 
     const formattedHistory = captures.map((c) => ({
       animal: { name: c.animal.name },
       date: c.capturedAt,
     }));
 
-    try {
-      await AsyncStorage.setItem(CAPTURES_HISTORY_KEY, JSON.stringify(formattedHistory));
-      console.log('📘 Histórico de capturas salvo:', formattedHistory);
-    } catch (e) {
-      console.error('❌ Erro ao salvar histórico de capturas:', e);
-    }
+    await AsyncStorage.setItem(CAPTURES_HISTORY_KEY, JSON.stringify(formattedHistory));
+    console.log('📘 Histórico de capturas salvo:', formattedHistory);
 
     const countMap = captures.reduce((acc: Record<string, number>, curr: any) => {
       const name = curr.animal.name;
       acc[name] = (acc[name] || 0) + 1;
       return acc;
     }, {});
+
     console.log('📊 Contagem de capturas por animal:', countMap);
 
     const userBadges: Record<string, Badge[]> = {};
@@ -85,45 +75,19 @@ async function updateCapturedPokemons(captures: any[]) {
       const internal = apiToInternalNameMap[apiName];
       const badgeKey = internalToBadgeNameMap[internal];
 
-      if (!badgeKey) {
-        console.log(`⚠️ Animal não mapeado para medalha: ${internal}`);
-        continue;
-      }
+      if (!badgeKey) continue;
 
       const availableBadges = badgesData[badgeKey];
-      if (!availableBadges) {
-        console.log(`⚠️ Sem medalhas definidas para: ${badgeKey}`);
-        continue;
-      }
+      if (!availableBadges) continue;
 
       const unlocked = availableBadges.filter((badge) => count >= badge.level);
-
       if (unlocked.length > 0) {
         userBadges[internal] = unlocked;
-        console.log(`🏅 Medalhas desbloqueadas para ${badgeKey} (${count} capturas):`);
-        unlocked.forEach((b) =>
-          console.log(`   - ${b.title} (nível ${b.level}): ${b.description}`)
-        );
-      } else {
-        console.log(`📭 Nenhuma medalha desbloqueada ainda para ${badgeKey} (${count} capturas).`);
       }
     }
 
-    try {
-      await AsyncStorage.setItem(BADGES_KEY, JSON.stringify(userBadges));
-      console.log('🎯 Medalhas salvas no AsyncStorage:', userBadges);
-    } catch (e) {
-      console.error('❌ Erro ao salvar medalhas:', e);
-    }
-
-    console.log('🏆 Medalhas totais do usuário:');
-    Object.entries(userBadges).forEach(([internalName, medals]) => {
-      const label = internalToBadgeNameMap[internalName] ?? internalName;
-      console.log(`- ${label}:`);
-      medals.forEach((badge) =>
-        console.log(`   • ${badge.title} (nível ${badge.level}) — ${badge.description}`)
-      );
-    });
+    await AsyncStorage.setItem(BADGES_KEY, JSON.stringify(userBadges));
+    console.log('🎯 Medalhas salvas no AsyncStorage:', userBadges);
 
   } catch (err) {
     console.error('❌ Erro geral ao processar capturas:', err);
@@ -133,10 +97,10 @@ async function updateCapturedPokemons(captures: any[]) {
 export default function LoginSuccess() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, refreshUser  } = useAuth();
 
   useEffect(() => {
-    const fetchCaptured = async () => {
+    const fetchUserInfoAndCaptured = async () => {
       if (!user?.id || !user?.accessToken) {
         console.warn('⚠️ Usuário não definido ou sem token. Abortando...');
         setIsLoading(false);
@@ -144,10 +108,9 @@ export default function LoginSuccess() {
       }
 
       try {
-        console.log('🔐 Iniciando requisição de capturas do usuário:', user?.id);
-
-        const response = await fetch(
-          `https://pokedex-back-end-production-9709.up.railway.app/captures/user/${user.id}`,
+        console.log('📥 Buscando dados atualizados do usuário...');
+        const userResponse = await fetch(
+          `https://pokedex-back-end-production-9709.up.railway.app/users/${user.id}`,
           {
             method: 'GET',
             headers: {
@@ -157,10 +120,48 @@ export default function LoginSuccess() {
           }
         );
 
-        const text = await response.text();
-        console.log('📦 Texto da resposta da API:', text);
+        const userData = await userResponse.json();
+        console.log('🎯 Dados do usuário atualizados:', userData);
 
+const updatedUser = {
+  id: userData._id,
+  name: userData.name,
+  email: userData.email,
+  password: user?.password || '',
+  accessToken: user?.accessToken || '',
+  title: userData.title,
+  totalPoints: userData.totalPoints,
+  level: Math.floor(userData.totalPoints / 300) + 1, 
+};
+
+
+await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+await refreshUser(); // atualiza o contexto com os novos dados
+console.log('✅ Dados do usuário atualizados no AsyncStorage:', updatedUser);
+console.log('📦 Dados montados para salvar:', updatedUser);
+
+
+      } catch (err) {
+        console.error('❌ Erro ao buscar dados atualizados do usuário:', err);
+      }
+
+      try {
+        console.log('🔐 Iniciando requisição de capturas do usuário:', user.id);
+
+        const capturesResponse = await fetch(
+          `https://pokedex-back-end-production-9709.up.railway.app/captures/user/${user.id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${user.accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        const text = await capturesResponse.text();
         const data = JSON.parse(text);
+        console.log('📡 Resposta da API:', data);
 
         if (!Array.isArray(data)) {
           console.warn('⚠️ Resposta inesperada da API de capturas:', data);
@@ -168,13 +169,6 @@ export default function LoginSuccess() {
         }
 
         await updateCapturedPokemons(data);
-
-        try {
-          const stored = await AsyncStorage.getItem(STORAGE_KEY);
-          console.log('💾 Pokémons no AsyncStorage:', stored);
-        } catch (e) {
-          console.error('❌ Erro ao ler STORAGE_KEY:', e);
-        }
 
       } catch (err) {
         console.error('❌ Erro ao buscar capturas do usuário:', err);
@@ -185,7 +179,7 @@ export default function LoginSuccess() {
       }
     };
 
-    fetchCaptured();
+    fetchUserInfoAndCaptured();
   }, []);
 
   if (isLoading) {
