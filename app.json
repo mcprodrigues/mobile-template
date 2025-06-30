@@ -16,7 +16,7 @@
       }
     },
     "android": {
-      "package": "com.devmcprodrigues.pokedex",
+      "package": "com.mcprodriguesdev.pokedex",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
@@ -48,10 +48,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "ab0f312d-e9a6-4329-8c6f-933e79751304"
-      }
+      "router": {}
     }
   }
 }

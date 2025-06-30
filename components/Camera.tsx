@@ -6,16 +6,17 @@ import {
 } from 'expo-camera';
 import {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
 } from 'react';
 import {
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 import {
@@ -28,7 +29,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-
 type CameraProps = {
   facing: 'front' | 'back';
 };
@@ -39,23 +39,23 @@ export type CameraHandler = {
 
 const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   const [permission, requestPermission] = useCameraPermissions();
+  const [hasPermission, setHasPermission] = useState(false);
+
   const cameraRef = useRef<any>(null);
   const isFocused = useIsFocused();
 
-const [zoom, setZoom] = useState(0); 
-const zoomValue = useSharedValue(1); 
+  const [zoom, setZoom] = useState(0);
+  const zoomValue = useSharedValue(1);
 
-
-const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
-  onActive: (event) => {
-    const newZoom = Math.min(Math.max((event.scale - 1) / 10 + zoom, 0), 1);
-    runOnJS(setZoom)(newZoom);
-  },
-  onEnd: () => {
-    zoomValue.value = 1;
-  },
-});
-
+  const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
+    onActive: (event) => {
+      const newZoom = Math.min(Math.max((event.scale - 1) / 10 + zoom, 0), 1);
+      runOnJS(setZoom)(newZoom);
+    },
+    onEnd: () => {
+      zoomValue.value = 1;
+    },
+  });
 
   useImperativeHandle(ref, () => ({
     takePicture: async () => {
@@ -66,6 +66,12 @@ const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>(
       return null;
     },
   }));
+
+  useEffect(() => {
+    if (permission?.granted) {
+      setHasPermission(true);
+    }
+  }, [permission]);
 
   if (!permission) {
     return <Text className="text-center mt-10">Verificando permissões...</Text>;
@@ -78,12 +84,14 @@ const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>(
           source={require('@/assets/images/moema-1.png')}
           style={{ width: 200, height: 300 }}
         />
-        <Text className="mb-2 text-center text-black text-lg font-poppinssb">Permita o acesso à câmera</Text>
+        <Text className="mb-2 text-center text-black text-lg font-poppinssb">
+          Permita o acesso à câmera
+        </Text>
         <TouchableOpacity
           onPress={requestPermission}
           className="bg-blue-900 px-4 py-2 w-52 rounded-full"
         >
-          <Text className="text-white  text-center font-poppinssb">Permitir</Text>
+          <Text className="text-white text-center font-poppinssb">Permitir</Text>
         </TouchableOpacity>
       </View>
     );
@@ -91,18 +99,17 @@ const pinchHandler = useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>(
 
   return (
     <View style={styles.container}>
-      {isFocused && (
-<PinchGestureHandler onGestureEvent={pinchHandler}>
-  <Animated.View style={StyleSheet.absoluteFill}>
-    <CameraView
-      ref={cameraRef}
-      style={StyleSheet.absoluteFillObject}
-      facing={facing}
-      zoom={zoom}
-    />
-  </Animated.View>
-</PinchGestureHandler>
-
+      {isFocused && hasPermission && (
+        <PinchGestureHandler onGestureEvent={pinchHandler}>
+          <Animated.View style={StyleSheet.absoluteFill}>
+            <CameraView
+              ref={cameraRef}
+              style={StyleSheet.absoluteFillObject}
+              facing={facing}
+              zoom={zoom}
+            />
+          </Animated.View>
+        </PinchGestureHandler>
       )}
     </View>
   );

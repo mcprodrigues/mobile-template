@@ -1,6 +1,6 @@
 import { images } from '@/constants/images';
 import { useRouter } from 'expo-router';
-import { LogOut, MoreVertical, Trash } from 'lucide-react-native';
+import { LogOut, MoreVertical, PencilLine, Trash } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
   Image,
@@ -10,15 +10,18 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 import { useAuth } from '@/contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+const { user, logout } = useAuth();
   const router = useRouter();
+
+
+
 
   const name = user?.name || 'Nome não disponível';
   const email = user?.email || 'Email não disponível';
@@ -27,6 +30,8 @@ export default function Profile() {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+const [isLoading, setIsLoading] = useState(true);
+
 
   const handleLogout = async () => {
     setShowLogoutConfirm(false);
@@ -38,38 +43,57 @@ export default function Profile() {
 
   return (
     <SafeAreaView className="flex-1 bg-white px-6 pt-10">
+
       <ScrollView>
-        {/* Header */}
-        <View className="flex-row items-end justify-between mt-4 mb-8">
+        <View className="flex-row items-center justify-center mt-4 mb-8">
           <View className="flex-row items-center">
             <Image
               source={images.Icon}
-              style={{ width: 42, height: 42 }}
-              resizeMode="contain"
+              style={{ width: 80, height: 80, borderRadius: 9999 }}
+              resizeMode="cover"
             />
-            <Text className="font-poppinssb text-zinc-800 text-xl ml-3">{name}</Text>
+            <View className="ml-4 flex-1">
+              <View className="flex-row items-center justify-between">
+                <TouchableOpacity onPress={() => router.push('/edit/Name')} className='justify-start items-center flex-row gap-2'>
+
+                <Text className="font-poppinssb text-zinc-800 text-xl">{name}</Text>
+                <PencilLine size={20} color="black"/>
+                </TouchableOpacity>
+      <View className='flex items-end'>
+        <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
+          <MoreVertical size={24} color="#4B5563" />
+        </TouchableOpacity>
+      </View>
+              </View>
+              <Text className="font-poppins text-zinc-500 text-sm mb-1">Treinador</Text>
+                {/* <View className="h-full bg-blue-900 rounded-full" style={{ width: `${xpProgress}%` }} /> */}
+              </View>
+              {/* <Text className="text-xs text-zinc-500 mt-1">{totalPoints}/{requiredPointsForNextLevel} XP</Text> */}
+            </View>
           </View>
-          <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
-            <MoreVertical size={24} color="#4B5563" />
-          </TouchableOpacity>
-        </View>
 
         <Text className="font-poppinssb text-black text-base mb-3">Informações da conta</Text>
 
-        <TouchableOpacity className="flex-col py-3">
-          <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
-        </TouchableOpacity>
+        <View className="justify-between flex-row py-3">
+          <View className='flex-col'>
+            <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
+          </View>
+        </View>
 
-        <TouchableOpacity className="flex-col py-3">
-          <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
-        </TouchableOpacity>
+        <View className="justify-between flex-row py-3">
+          <View className='flex-col'>
+            <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
+          </View>
+        </View>
 
-        <TouchableOpacity className="flex-col py-3">
-          <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
-          <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
-        </TouchableOpacity>
+        <View className="justify-between flex-row py-3">
+          <View className='flex-col'>
+            <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
+            <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
+          </View>
+        </View>
 
         <Text className="font-poppinssb text-black text-base mt-10 mb-3">Outros</Text>
 
@@ -82,7 +106,7 @@ export default function Profile() {
         </TouchableOpacity>
 
         <Text className="text-zinc-500 font-poppins text-sm mt-2">
-          Você entrou como {name}.
+          Você entrou como {name}
         </Text>
       </ScrollView>
 
@@ -169,7 +193,7 @@ export default function Profile() {
               Tem certeza que deseja deletar sua conta?
             </Text>
             <Text className="text-center text-zinc-600 font-poppins mb-6">
-              Essa é uma ação <Text style={{ fontStyle: 'italic' }}>irreversível</Text>!
+              Essa é uma ação irreversível
             </Text>
 
             <TouchableOpacity

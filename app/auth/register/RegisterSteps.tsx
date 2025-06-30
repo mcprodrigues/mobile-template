@@ -216,7 +216,7 @@ const isSenhaValid = formData.password.trim().length >= 8;
           <TextInput
             className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
             placeholder="Senha"
-                            placeholderTextColor="#999"
+            placeholderTextColor="#999"
 
             value={formData.password}
             onChangeText={(text) => setFormData((prev) => ({ ...prev, password: text }))}
