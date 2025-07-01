@@ -115,10 +115,8 @@ const isSenhaValid = formData.password.trim().length >= 8;
       };
 
       try {
-        // Registrar usuário
         await registerUser(payload);
 
-        // Fazer login para obter o token
         const loginResponse = await loginUser({
           email: formData.email.trim(),
           password: formData.password,
@@ -127,7 +125,6 @@ const isSenhaValid = formData.password.trim().length >= 8;
         const userId = loginResponse.user._id;
         const accessToken = loginResponse.access_token;
 
-        // Login no contexto
         await login({
           id: userId,
           name: formData.name,
@@ -216,7 +213,7 @@ const isSenhaValid = formData.password.trim().length >= 8;
           <TextInput
             className={`w-full border rounded-md px-4 py-3 text-base text-black font-poppins ${isFocused ? 'border-black' : 'border-zinc-300'} pr-12`}
             placeholder="Senha"
-            placeholderTextColor="#999"
+                            placeholderTextColor="#999"
 
             value={formData.password}
             onChangeText={(text) => setFormData((prev) => ({ ...prev, password: text }))}
