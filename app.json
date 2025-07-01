@@ -3,7 +3,7 @@
     "name": "Pokédex Unifor",
     "slug": "Pokedex_Unifor",
     "version": "1.0.2",
-    "icon": "./assets/images/logo.png", 
+    "icon": "./assets/images/splashscreen_logo.png",
     "orientation": "portrait",
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
@@ -18,7 +18,7 @@
     "android": {
       "package": "com.mcprodriguesdev.pokedex",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/splashscreen_logo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -48,7 +48,10 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {}
+      "router": {},
+      "eas": {
+        "projectId": "beb4271b-04bb-472e-8857-5e5611dd4669"
+      }
     }
   }
 }

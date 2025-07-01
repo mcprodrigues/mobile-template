@@ -68,10 +68,11 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
   }));
 
   useEffect(() => {
-    if (permission?.granted) {
+    if (permission?.granted && !hasPermission) {
       setHasPermission(true);
     }
-  }, [permission]);
+  }, [permission?.granted]);
+
 
   if (!permission) {
     return <Text className="text-center mt-10">Verificando permissões...</Text>;
@@ -88,11 +89,17 @@ const Camera = forwardRef<CameraHandler, CameraProps>(({ facing }, ref) => {
           Permita o acesso à câmera
         </Text>
         <TouchableOpacity
-          onPress={requestPermission}
+          onPress={async () => {
+            const response = await requestPermission();
+            if (response?.granted) {
+              setHasPermission(true);
+            }
+          }}
           className="bg-blue-900 px-4 py-2 w-52 rounded-full"
         >
           <Text className="text-white text-center font-poppinssb">Permitir</Text>
         </TouchableOpacity>
+
       </View>
     );
   }
