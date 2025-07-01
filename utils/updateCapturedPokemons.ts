@@ -28,13 +28,12 @@ const badgesData = medalsJson as Record<string, Badge[]>;
 const STORAGE_KEY = 'capturedPokemons';
 const CAPTURES_HISTORY_KEY = 'captureHistory';
 const BADGES_KEY = 'userBadges';
-const RECENT_BADGES_KEY = 'recentBadges'; // Novo
+const RECENT_BADGES_KEY = 'recentBadges';
 
-export async function updateCapturedPokemons(captures: any[]) {
+export async function updateCapturedPokemons(captures: any[], showToasts = true) {
   try {
     console.log('📌 Dados brutos das capturas recebidas:', captures.length);
 
-    // 1. Atualizar estado dos pokémons encontrados
     const internalNames = [
       ...new Set(
         captures
@@ -55,7 +54,6 @@ export async function updateCapturedPokemons(captures: any[]) {
       console.error('❌ Erro ao salvar pokémons:', e);
     }
 
-    // 2. Histórico de capturas
     const formattedHistory = captures.map((c) => ({
       animal: { name: c.animal?.name },
       date: c.capturedAt,
@@ -68,7 +66,6 @@ export async function updateCapturedPokemons(captures: any[]) {
       console.error('❌ Erro ao salvar histórico:', e);
     }
 
-    // 3. Contagem por animal
     const countMap = captures.reduce((acc: Record<string, number>, curr: any) => {
       const name = curr.animal?.name;
       if (!name) return acc;
@@ -77,7 +74,6 @@ export async function updateCapturedPokemons(captures: any[]) {
     }, {});
     console.log('📊 Contagem de capturas por animal:', countMap);
 
-    // 4. Obter medalhas anteriores
     let previousBadges: Record<string, Badge[]> = {};
     try {
       const previous = await AsyncStorage.getItem(BADGES_KEY);
@@ -89,25 +85,15 @@ export async function updateCapturedPokemons(captures: any[]) {
     const userBadges: Record<string, Badge[]> = {};
     const newlyUnlockedBadges: Badge[] = [];
 
-    // 5. Verificação de conquistas por animal
     for (const [apiName, count] of Object.entries(countMap)) {
       const internal = apiToInternalNameMap[apiName];
-      if (!internal) {
-        console.log(`⚠️ Nome da API não mapeado internamente: ${apiName}`);
-        continue;
-      }
+      if (!internal) continue;
 
       const badgeKey = internalToBadgeNameMap[internal];
-      if (!badgeKey) {
-        console.log(`⚠️ Animal sem mapeamento para medalha: ${internal}`);
-        continue;
-      }
+      if (!badgeKey) continue;
 
       const availableBadges = badgesData[badgeKey];
-      if (!availableBadges) {
-        console.log(`⚠️ Sem medalhas definidas para: ${badgeKey}`);
-        continue;
-      }
+      if (!availableBadges) continue;
 
       const unlocked = availableBadges.filter((b) => count >= b.level);
       const previouslyUnlocked = previousBadges[internal] || [];
@@ -118,7 +104,7 @@ export async function updateCapturedPokemons(captures: any[]) {
 
       newlyUnlockedBadges.push(...newBadges);
 
-      if (newBadges.length > 0) {
+      if (newBadges.length > 0 && showToasts) {
         newBadges.forEach((badge) => {
           try {
             showBadgeToast('Nova conquista desbloqueada!', badge.title, badge.description);
@@ -135,16 +121,9 @@ export async function updateCapturedPokemons(captures: any[]) {
 
       if (combined.length > 0) {
         userBadges[internal] = combined;
-        console.log(`🏅 Medalhas desbloqueadas para ${badgeKey} (${count} capturas):`);
-        combined.forEach((b) =>
-          console.log(`   - ${b.title} (nível ${b.level}) — ${b.description}`)
-        );
-      } else {
-        console.log(`📭 Nenhuma medalha desbloqueada ainda para ${badgeKey}.`);
       }
     }
 
-    // 6. Salvar medalhas acumuladas
     try {
       const mergedBadges: Record<string, Badge[]> = { ...previousBadges };
 
@@ -164,7 +143,6 @@ export async function updateCapturedPokemons(captures: any[]) {
       console.error('❌ Erro ao salvar medalhas:', e);
     }
 
-    // 7. Atualizar conquistas recentes
     try {
       const existingRecent = await AsyncStorage.getItem(RECENT_BADGES_KEY);
       const recentList: Badge[] = existingRecent ? JSON.parse(existingRecent) : [];
@@ -177,7 +155,7 @@ export async function updateCapturedPokemons(captures: any[]) {
               (n) => n.title === b.title && n.level === b.level
             )
         ),
-      ].slice(0, 10); // últimas 10 conquistas
+      ].slice(0, 10);
 
       await AsyncStorage.setItem(RECENT_BADGES_KEY, JSON.stringify(updatedRecent));
       console.log('🆕 Conquistas recentes atualizadas:', updatedRecent);
@@ -185,15 +163,26 @@ export async function updateCapturedPokemons(captures: any[]) {
       console.error('❌ Erro ao salvar conquistas recentes:', e);
     }
 
-    // 8. Exibir resumo final
-    console.log('🏆 Medalhas totais do usuário:');
-    Object.entries(userBadges).forEach(([internal, badges]) => {
-      const label = internalToBadgeNameMap[internal] ?? internal;
-      console.log(`- ${label}:`);
-      badges.forEach((badge) =>
-        console.log(`   • ${badge.title} (nível ${badge.level}) — ${badge.description}`)
-      );
-    });
+    try {
+      const totalPoints = captures.reduce((sum, c) => sum + (c.points ?? 100), 0);
+      const level = Math.floor(totalPoints / 300) + 1;
+
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const updatedUser = {
+          ...parsedUser,
+          totalPoints,
+          level,
+        };
+
+        await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log('✅ Pontos e nível atualizados no AsyncStorage:', updatedUser);
+      }
+    } catch (e) {
+      console.error('❌ Erro ao calcular/salvar pontos e nível:', e);
+    }
+
   } catch (err) {
     console.error('❌ Erro geral ao processar capturas:', err);
   }

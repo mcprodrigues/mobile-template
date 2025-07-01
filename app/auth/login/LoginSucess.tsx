@@ -135,58 +135,13 @@ export default function LoginSuccess() {
   const router = useRouter();
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchCaptured = async () => {
-      if (!user?.id || !user?.accessToken) {
-        console.warn('⚠️ Usuário não definido ou sem token. Abortando...');
-        setIsLoading(false);
-        return;
-      }
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsLoading(false);
+  }, 2000);
+  return () => clearTimeout(timer);
+}, []);
 
-      try {
-        console.log('🔐 Iniciando requisição de capturas do usuário:', user?.id);
-
-        const response = await fetch(
-          `https://pokedex-back-end-production-9709.up.railway.app/captures/user/${user.id}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${user.accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        const text = await response.text();
-        console.log('📦 Texto da resposta da API:', text);
-
-        const data = JSON.parse(text);
-
-        if (!Array.isArray(data)) {
-          console.warn('⚠️ Resposta inesperada da API de capturas:', data);
-          return;
-        }
-
-        await updateCapturedPokemons(data);
-
-        try {
-          const stored = await AsyncStorage.getItem(STORAGE_KEY);
-          console.log('💾 Pokémons no AsyncStorage:', stored);
-        } catch (e) {
-          console.error('❌ Erro ao ler STORAGE_KEY:', e);
-        }
-
-      } catch (err) {
-        console.error('❌ Erro ao buscar capturas do usuário:', err);
-      } finally {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000);
-      }
-    };
-
-    fetchCaptured();
-  }, []);
 
   if (isLoading) {
     return (

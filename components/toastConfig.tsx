@@ -53,7 +53,6 @@ export const toastConfig: ToastConfig = {
     </View>
   ),
 
-  // 👇 Novo tipo de toast personalizado para conquistas
   customBadge: ({ props }: ToastConfigParams<any>) => (
     <View
       style={{
