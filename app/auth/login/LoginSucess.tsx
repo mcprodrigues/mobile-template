@@ -99,6 +99,7 @@ export default function LoginSuccess() {
   const router = useRouter();
   const { user, refreshUser  } = useAuth();
 
+<<<<<<< HEAD
   useEffect(() => {
     const fetchUserInfoAndCaptured = async () => {
       if (!user?.id || !user?.accessToken) {
@@ -181,6 +182,15 @@ console.log('📦 Dados montados para salvar:', updatedUser);
 
     fetchUserInfoAndCaptured();
   }, []);
+=======
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsLoading(false);
+  }, 2000);
+  return () => clearTimeout(timer);
+}, []);
+
+>>>>>>> fix/build
 
   if (isLoading) {
     return (

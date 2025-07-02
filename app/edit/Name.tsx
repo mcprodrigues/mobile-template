@@ -89,7 +89,11 @@ export default function ChangeNameScreen() {
           </View>
         </View>
 
+<<<<<<< HEAD
         <View>
+=======
+        <View className='flex items-center mb-10'>
+>>>>>>> fix/build
           <Button
             title="Atualizar"
             onPress={handleChangeName}
@@ -100,4 +104,8 @@ export default function ChangeNameScreen() {
       </KeyboardAwareScrollView>
     </View>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> fix/build

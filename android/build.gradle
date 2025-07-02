@@ -37,4 +37,3 @@ allprojects {
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
 gradle.ext.REACT_NATIVE_REANIMATED_DISABLE_CPP_BUILD = true
-

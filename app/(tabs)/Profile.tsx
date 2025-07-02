@@ -1,6 +1,11 @@
 import { images } from '@/constants/images';
+<<<<<<< HEAD
 import { useFocusEffect, useRouter } from 'expo-router';
 import { ChevronRight, LogOut, MoreVertical, Trash } from 'lucide-react-native';
+=======
+import { useRouter } from 'expo-router';
+import { LogOut, MoreVertical, PencilLine, Trash } from 'lucide-react-native';
+>>>>>>> fix/build
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -11,13 +16,14 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 import { useAuth } from '@/contexts/AuthContext';
 import Toast from 'react-native-toast-message';
 
 export default function Profile() {
+<<<<<<< HEAD
 const { user, refreshUser, isUserLoading, logout } = useAuth();
   const router = useRouter();
 
@@ -28,6 +34,12 @@ const { user, refreshUser, isUserLoading, logout } = useAuth();
   const requiredPointsForNextLevel = (level + 1) * 300;
 
 const xpProgress = (totalPoints / requiredPointsForNextLevel) * 100;
+=======
+const { user, logout } = useAuth();
+  const router = useRouter();
+
+
+>>>>>>> fix/build
 
 
   const name = user?.name || 'Nome não disponível';
@@ -39,6 +51,7 @@ const xpProgress = (totalPoints / requiredPointsForNextLevel) * 100;
   const [isDeleting, setIsDeleting] = useState(false);
 const [isLoading, setIsLoading] = useState(true);
 
+<<<<<<< HEAD
 
 useFocusEffect(
   React.useCallback(() => {
@@ -68,6 +81,8 @@ if (isUserLoading || !user) {
   );
 }
 
+=======
+>>>>>>> fix/build
 
   const handleLogout = async () => {
     setShowLogoutConfirm(false);
@@ -79,11 +94,14 @@ if (isUserLoading || !user) {
 
   return (
     <SafeAreaView className="flex-1 bg-white px-6 pt-10">
+<<<<<<< HEAD
       <View className='flex items-end'>
         <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
           <MoreVertical size={24} color="#4B5563" />
         </TouchableOpacity>
       </View>
+=======
+>>>>>>> fix/build
 
       <ScrollView>
         <View className="flex-row items-center justify-center mt-4 mb-8">
@@ -95,6 +113,7 @@ if (isUserLoading || !user) {
             />
             <View className="ml-4 flex-1">
               <View className="flex-row items-center justify-between">
+<<<<<<< HEAD
                 <Text className="font-poppinssb text-zinc-800 text-xl">{name}</Text>
                 <View className="bg-blue-900 rounded-md px-2 py-1">
                   <Text className="text-xs font-poppinssb text-white">Nível {level}</Text>
@@ -112,26 +131,65 @@ if (isUserLoading || !user) {
         <Text className="font-poppinssb text-black text-base mb-3">Informações da conta</Text>
 
         <TouchableOpacity className="justify-between flex-row py-3" onPress={() => router.push('/edit/Name')}>
+=======
+                <TouchableOpacity onPress={() => router.push('/edit/Name')} className='justify-start items-center flex-row gap-2'>
+
+                <Text className="font-poppinssb text-zinc-800 text-xl">{name}</Text>
+                <PencilLine size={20} color="black"/>
+                </TouchableOpacity>
+      <View className='flex items-end'>
+        <TouchableOpacity onPress={() => setShowOptionsModal(true)}>
+          <MoreVertical size={24} color="#4B5563" />
+        </TouchableOpacity>
+      </View>
+              </View>
+              <Text className="font-poppins text-zinc-500 text-sm mb-1">Treinador</Text>
+                {/* <View className="h-full bg-blue-900 rounded-full" style={{ width: `${xpProgress}%` }} /> */}
+              </View>
+              {/* <Text className="text-xs text-zinc-500 mt-1">{totalPoints}/{requiredPointsForNextLevel} XP</Text> */}
+            </View>
+          </View>
+
+        <Text className="font-poppinssb text-black text-base mb-3">Informações da conta</Text>
+
+        <View className="justify-between flex-row py-3">
+>>>>>>> fix/build
           <View className='flex-col'>
             <Text className="text-zinc-800 font-poppinssb text-sm">Nome</Text>
             <Text className="text-zinc-500 font-poppins text-sm">{name}</Text>
           </View>
+<<<<<<< HEAD
           <ChevronRight color='black' size={20} />
         </TouchableOpacity>
 
         <TouchableOpacity className="justify-between flex-row py-3">
+=======
+        </View>
+
+        <View className="justify-between flex-row py-3">
+>>>>>>> fix/build
           <View className='flex-col'>
             <Text className="text-zinc-800 font-poppinssb text-sm">E-mail</Text>
             <Text className="text-zinc-500 font-poppins text-sm">{email}</Text>
           </View>
+<<<<<<< HEAD
         </TouchableOpacity>
 
         <TouchableOpacity className="justify-between flex-row py-3">
+=======
+        </View>
+
+        <View className="justify-between flex-row py-3">
+>>>>>>> fix/build
           <View className='flex-col'>
             <Text className="text-zinc-800 font-poppinssb text-sm">Senha</Text>
             <Text className="text-zinc-500 font-poppins text-sm">••••••••••</Text>
           </View>
+<<<<<<< HEAD
         </TouchableOpacity>
+=======
+        </View>
+>>>>>>> fix/build
 
         <Text className="font-poppinssb text-black text-base mt-10 mb-3">Outros</Text>
 

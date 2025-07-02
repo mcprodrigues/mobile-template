@@ -1,4 +1,4 @@
-package com.mcprodrigues.pokedex
+package com.mcprodriguesdev.pokedex
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

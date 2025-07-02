@@ -109,7 +109,7 @@ export default function LoginForm() {
             </Link>
           </View>
 
-          <View className="mb-10">
+          <View className="flex items-center mb-10">
             <Button
               title="Entrar"
               variant={email && senha.length >= 6 ? 'primary' : 'disabled'}

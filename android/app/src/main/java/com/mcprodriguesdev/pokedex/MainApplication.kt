@@ -1,4 +1,4 @@
-package com.mcprodrigues.pokedex
+package com.mcprodriguesdev.pokedex
 
 import android.app.Application
 import android.content.res.Configuration
